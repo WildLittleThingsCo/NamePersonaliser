@@ -1,4 +1,3 @@
-javascript
 // Wild Little Things & Co personalised letter visualiser.
 // Each letter can have its own colour from the selected collection.
 
