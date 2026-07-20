@@ -75,6 +75,8 @@ const collectionPalettes = {
 };
 
 const nameInput = document.getElementById("nameInput");
+const collectionSelect =
+  document.getElementById("collectionSelect");
 const swatchesEl = document.getElementById("swatches");
 const previewCanvas = document.getElementById("previewCanvas");
 const ctx = previewCanvas.getContext("2d");
@@ -84,7 +86,13 @@ const downloadBtn = document.getElementById("downloadBtn");
 const bgUpload = document.getElementById("bgUpload");
 const resetBtn = document.getElementById("resetBtn");
 
-let selectedColor = palette[0];
+let activeCollection = collectionSelect.value;
+
+let activePalette =
+  collectionPalettes[activeCollection];
+
+let selectedColor =
+  activePalette[0].hex;
 let bgImage = null;
 let mochiFontLoaded = false;
 
