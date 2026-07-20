@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Product Name Visualiser</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Optional: add Google Fonts or your licensed fonts here -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="container">
+    <h1>Product Visualiser</h1>
+
+    <section class="controls">
+      <label>
+        Enter name to render
+        <input id="nameInput" type="text" placeholder="Type the name..." value="Alex" />
+      </label>
+
+      <label>
+        Choose font
+        <select id="fontSelect">
+          <option value="Montserrat, sans-serif">Montserrat (Sans)</option>
+          <option value="'Playfair Display', serif">Playfair Display (Serif)</option>
+          <option value="cursive">Cursive</option>
+        </select>
+      </label>
+
+      <div class="palette-group">
+        <div class="palette-title">Choose colour</div>
+        <div id="swatches" class="swatches" aria-label="Colour swatches"></div>
+        <div class="picker-row">
+          <input id="customColor" type="color" title="Custom colour" />
+          <button id="addCustom">Add</button>
+        </div>
+      </div>
+
+      <label>
+        Upload product background (optional)
+        <input id="bgUpload" type="file" accept="image/*" />
+      </label>
+
+      <div class="buttons">
+        <button id="downloadBtn">Download PNG</button>
+        <button id="resetBtn">Reset</button>
+      </div>
+    </section>
+
+    <section class="preview">
+      <div class="canvas-wrapper">
+        <canvas id="previewCanvas" width="1200" height="400" aria-label="Preview canvas"></canvas>
+      </div>
+      <p class="hint">Preview shows how the name will look on the product. Replace sample colours with your official range in app.js.</p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
