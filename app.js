@@ -4,79 +4,30 @@
 
 const collectionPalettes = {
   ceramic: [
-    {
-      name: "Lilac",
-      hex: "#C5A6D8"
-    },
-    {
-      name: "Soft Pink",
-      hex: "#E8B6C2"
-    },
-    {
-      name: "Ice Blue",
-      hex: "#AFCEDC"
-    },
-    {
-      name: "Apple Green",
-      hex: "#A8C98E"
-    },
-    {
-      name: "Lemon",
-      hex: "#E7D47A"
-    },
-    {
-      name: "Mandarin",
-      hex: "#D98B55"
-    },
-    {
-      name: "Plum",
-      hex: "#754B68"
-    },
-    {
-      name: "Marine",
-      hex: "#416B7A"
-    }
+    { name: "Lilac", hex: "#C5A6D8" },
+    { name: "Soft Pink", hex: "#E8B6C2" },
+    { name: "Ice Blue", hex: "#AFCEDC" },
+    { name: "Apple Green", hex: "#A8C98E" },
+    { name: "Lemon", hex: "#E7D47A" },
+    { name: "Mandarin", hex: "#D98B55" },
+    { name: "Plum", hex: "#754B68" },
+    { name: "Marine", hex: "#416B7A" }
   ],
 
   wildBear: [
-    {
-      name: "Ivory White",
-      hex: "#EEE9DF"
-    },
-    {
-      name: "Beige",
-      hex: "#D2BFA4"
-    },
-    {
-      name: "Latte",
-      hex: "#B99F82"
-    },
-    {
-      name: "Caramel",
-      hex: "#A9784F"
-    },
-    {
-      name: "Chocolate Brown",
-      hex: "#6E4935"
-    },
-    {
-      name: "Dark Brown",
-      hex: "#443126"
-    },
-    {
-      name: "Desert Tan",
-      hex: "#C6A77C"
-    },
-    {
-      name: "Nardo Grey",
-      hex: "#9A9A94"
-    }
+    { name: "Ivory White", hex: "#EEE9DF" },
+    { name: "Beige", hex: "#D2BFA4" },
+    { name: "Latte", hex: "#B99F82" },
+    { name: "Caramel", hex: "#A9784F" },
+    { name: "Chocolate Brown", hex: "#6E4935" },
+    { name: "Dark Brown", hex: "#443126" },
+    { name: "Desert Tan", hex: "#C6A77C" },
+    { name: "Nardo Grey", hex: "#9A9A94" }
   ]
 };
 
 const nameInput = document.getElementById("nameInput");
-const collectionSelect =
-  document.getElementById("collectionSelect");
+const collectionSelect = document.getElementById("collectionSelect");
 const swatchesEl = document.getElementById("swatches");
 const previewCanvas = document.getElementById("previewCanvas");
 const ctx = previewCanvas.getContext("2d");
@@ -87,12 +38,8 @@ const bgUpload = document.getElementById("bgUpload");
 const resetBtn = document.getElementById("resetBtn");
 
 let activeCollection = collectionSelect.value;
-
-let activePalette =
-  collectionPalettes[activeCollection];
-
-let selectedColor =
-  activePalette[0].hex;
+let activePalette = collectionPalettes[activeCollection];
+let selectedColor = activePalette[0].hex;
 let bgImage = null;
 let mochiFontLoaded = false;
 
@@ -113,25 +60,27 @@ async function loadMochiFont() {
   }
 }
 
-// Populate colour swatches.
+// Create the colour swatches for the selected collection.
 function buildSwatches() {
   swatchesEl.innerHTML = "";
 
-  palette.forEach((colour) => {
+  activePalette.forEach((colour) => {
     const swatch = document.createElement("button");
 
     swatch.className = "swatch";
     swatch.type = "button";
-    swatch.style.background = colour;
-    swatch.title = colour;
-    swatch.dataset.color = colour;
+    swatch.style.backgroundColor = colour.hex;
+    swatch.title = colour.name;
+    swatch.dataset.color = colour.hex;
+    swatch.setAttribute("aria-label", colour.name);
 
-    if (colour === selectedColor) {
+    if (colour.hex === selectedColor) {
       swatch.classList.add("selected");
     }
 
     swatch.addEventListener("click", () => {
-      selectedColor = colour;
+      selectedColor = colour.hex;
+      customColor.value = colour.hex;
 
       document.querySelectorAll(".swatch").forEach((item) => {
         item.classList.remove("selected");
@@ -145,22 +94,42 @@ function buildSwatches() {
   });
 }
 
-buildSwatches();
+// Change palette when the collection changes.
+collectionSelect.addEventListener("change", () => {
+  activeCollection = collectionSelect.value;
+  activePalette = collectionPalettes[activeCollection];
+  selectedColor = activePalette[0].hex;
+  customColor.value = selectedColor;
 
-addCustom.addEventListener("click", () => {
-  const colour = customColor.value;
-
-  if (!palette.includes(colour)) {
-    palette.unshift(colour);
-  }
-
-  selectedColor = colour;
   buildSwatches();
   render();
 });
 
+// Add a custom colour to the currently selected collection.
+addCustom.addEventListener("click", () => {
+  const colour = customColor.value;
+
+  const colourAlreadyExists = activePalette.some(
+    (item) => item.hex.toLowerCase() === colour.toLowerCase()
+  );
+
+  if (!colourAlreadyExists) {
+    activePalette.unshift({
+      name: "Custom colour",
+      hex: colour
+    });
+  }
+
+  selectedColor = colour;
+
+  buildSwatches();
+  render();
+});
+
+// Update the preview as the name is typed.
 nameInput.addEventListener("input", render);
 
+// Preview a custom colour while it is being selected.
 customColor.addEventListener("input", (event) => {
   selectedColor = event.target.value;
 
@@ -171,6 +140,7 @@ customColor.addEventListener("input", (event) => {
   render();
 });
 
+// Upload a background photo.
 bgUpload.addEventListener("change", (event) => {
   const file = event.target.files[0];
 
@@ -194,17 +164,25 @@ bgUpload.addEventListener("change", (event) => {
   reader.readAsDataURL(file);
 });
 
+// Reset the visualiser.
 resetBtn.addEventListener("click", () => {
   nameInput.value = "";
+
+  collectionSelect.value = "ceramic";
+  activeCollection = "ceramic";
+  activePalette = collectionPalettes.ceramic;
+
+  selectedColor = activePalette[0].hex;
+  customColor.value = selectedColor;
+
   bgImage = null;
   bgUpload.value = "";
-  selectedColor = palette[0];
-  customColor.value = "#000000";
 
   buildSwatches();
   render();
 });
 
+// Download the preview as a PNG.
 downloadBtn.addEventListener("click", () => {
   render();
 
@@ -222,7 +200,6 @@ function render() {
 
   ctx.clearRect(0, 0, width, height);
 
-  // Draw uploaded background.
   if (bgImage) {
     const canvasRatio = width / height;
     const imageRatio = bgImage.width / bgImage.height;
@@ -254,7 +231,6 @@ function render() {
       height
     );
   } else {
-    // Draw the sample product background.
     ctx.save();
     ctx.fillStyle = "#00000008";
     ctx.fillRect(18, 18, width - 36, height - 36);
@@ -283,10 +259,8 @@ function render() {
   ctx.textBaseline = "middle";
   ctx.fillStyle = selectedColor;
 
-  // Always use Mochi Boom for the generated name.
   ctx.font = `${fontSize}px "Mochi"`;
 
-  // Reduce the font size until the complete name fits.
   while (
     ctx.measureText(text).width > width - 160 &&
     fontSize > 10
@@ -312,7 +286,7 @@ function render() {
   }
 }
 
-// Helper for drawing rounded rectangles.
+// Rounded rectangle helper.
 function roundRect(context, x, y, width, height, radius) {
   context.beginPath();
   context.moveTo(x + radius, y);
@@ -323,7 +297,7 @@ function roundRect(context, x, y, width, height, radius) {
   context.closePath();
 }
 
-// Convert a hex colour to RGBA.
+// Convert hex colour to RGBA.
 function hexToRgba(hex, alpha = 1) {
   if (!hex) {
     return `rgba(0, 0, 0, ${alpha})`;
@@ -348,6 +322,12 @@ function hexToRgba(hex, alpha = 1) {
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
 
-// Load the font, then render the visualiser.
+// Set initial colour-picker value.
+customColor.value = selectedColor;
+
+// Build the first palette.
+buildSwatches();
+
+// Load the font and render the visualiser.
 loadMochiFont();
 ```
