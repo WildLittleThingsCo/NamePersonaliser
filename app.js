@@ -1,6 +1,6 @@
 ```javascript
-// Simple product visualiser
-// The generated name always uses the Mochi Boom font.
+// Wild Little Things & Co personalised letter visualiser.
+// Each letter can have its own colour from the selected collection.
 
 const collectionPalettes = {
   ceramic: [
@@ -28,25 +28,23 @@ const collectionPalettes = {
 
 const nameInput = document.getElementById("nameInput");
 const collectionSelect = document.getElementById("collectionSelect");
-const swatchesEl = document.getElementById("swatches");
-const letterColorControls =
-  document.getElementById("letterColorControls");
+const letterColorControls = document.getElementById(
+  "letterColorControls"
+);
 const previewCanvas = document.getElementById("previewCanvas");
-const ctx = previewCanvas.getContext("2d");
-const customColor = document.getElementById("customColor");
-const addCustom = document.getElementById("addCustom");
-const downloadBtn = document.getElementById("downloadBtn");
 const bgUpload = document.getElementById("bgUpload");
 const resetBtn = document.getElementById("resetBtn");
+const downloadBtn = document.getElementById("downloadBtn");
+
+const ctx = previewCanvas.getContext("2d");
 
 let activeCollection = collectionSelect.value;
 let activePalette = collectionPalettes[activeCollection];
-let selectedColor = activePalette[0].hex;
-let letterColors = [];
-let bgImage = null;
+let letterColours = [];
+let backgroundImage = null;
 let mochiFontLoaded = false;
 
-// Load Mochi Boom specifically for the canvas.
+// Load Mochi Boom for both the controls and canvas.
 const mochiFont = new FontFace(
   "Mochi",
   'url("fonts/MochiBoom.ttf")'
@@ -55,95 +53,188 @@ const mochiFont = new FontFace(
 async function loadMochiFont() {
   try {
     const loadedFont = await mochiFont.load();
+
     document.fonts.add(loadedFont);
     mochiFontLoaded = true;
+
+    buildLetterControls();
     render();
   } catch (error) {
     console.error("Mochi Boom could not be loaded:", error);
+
+    // The visualiser will still work with a fallback font.
+    buildLetterControls();
+    render();
   }
 }
 
-// Create the colour swatches for the selected collection.
-function buildSwatches() {
-  swatchesEl.innerHTML = "";
+// Return the current name without leading or trailing spaces.
+function getCurrentText() {
+  return nameInput.value.trim();
+}
 
-  activePalette.forEach((colour) => {
-    const swatch = document.createElement("button");
-
-    swatch.className = "swatch";
-    swatch.type = "button";
-    swatch.style.backgroundColor = colour.hex;
-    swatch.title = colour.name;
-    swatch.dataset.color = colour.hex;
-    swatch.setAttribute("aria-label", colour.name);
-
-    if (colour.hex === selectedColor) {
-      swatch.classList.add("selected");
+// Give each typed character a default colour.
+//
+// Colours rotate through the selected collection so names begin
+// with a balanced rainbow or neutral colour pattern.
+function createDefaultLetterColours(text) {
+  return Array.from(text).map((character, index) => {
+    if (character === " ") {
+      return null;
     }
 
-    swatch.addEventListener("click", () => {
-      selectedColor = colour.hex;
-      customColor.value = colour.hex;
-
-      document.querySelectorAll(".swatch").forEach((item) => {
-        item.classList.remove("selected");
-      });
-
-      swatch.classList.add("selected");
-      render();
-    });
-
-    swatchesEl.appendChild(swatch);
+    return activePalette[index % activePalette.length].hex;
   });
 }
 
-// Change palette when the collection changes.
+// Find the full colour information using a hex value.
+function findColour(hex) {
+  return activePalette.find(
+    (colour) => colour.hex.toLowerCase() === hex.toLowerCase()
+  );
+}
+
+// Keep existing colour choices when the customer adds letters.
+//
+// Example:
+// CART → CARTER
+//
+// The first four colour selections are preserved and the new
+// letters receive the next colours in the collection.
+function syncLetterColours() {
+  const characters = Array.from(getCurrentText());
+
+  letterColours = characters.map((character, index) => {
+    if (character === " ") {
+      return null;
+    }
+
+    const existingColour = letterColours[index];
+    const existingColourIsAvailable =
+      existingColour &&
+      activePalette.some(
+        (colour) =>
+          colour.hex.toLowerCase() === existingColour.toLowerCase()
+      );
+
+    if (existingColourIsAvailable) {
+      return existingColour;
+    }
+
+    return activePalette[index % activePalette.length].hex;
+  });
+}
+
+// Create the clickable palette beneath each letter.
+function buildLetterControls() {
+  const text = getCurrentText();
+
+  letterColorControls.innerHTML = "";
+
+  if (!text) {
+    const message = document.createElement("p");
+
+    message.className = "section-description";
+    message.textContent =
+      "Enter a name above to begin choosing colours.";
+
+    letterColorControls.appendChild(message);
+    letterColours = [];
+
+    return;
+  }
+
+  syncLetterColours();
+
+  Array.from(text).forEach((character, index) => {
+    if (character === " ") {
+      return;
+    }
+
+    const control = document.createElement("div");
+    control.className = "letter-control";
+
+    const letterPreview = document.createElement("div");
+    letterPreview.className = "letter-character";
+    letterPreview.textContent = character;
+    letterPreview.style.color = letterColours[index];
+
+    const selectedColour = findColour(letterColours[index]);
+
+    const colourName = document.createElement("div");
+    colourName.className = "letter-colour-name";
+    colourName.textContent = selectedColour
+      ? selectedColour.name
+      : "Colour";
+
+    const palette = document.createElement("div");
+    palette.className = "letter-palette";
+
+    activePalette.forEach((colour) => {
+      const colourButton = document.createElement("button");
+
+      colourButton.type = "button";
+      colourButton.className = "letter-colour-button";
+      colourButton.style.backgroundColor = colour.hex;
+      colourButton.title = colour.name;
+      colourButton.setAttribute(
+        "aria-label",
+        `Set ${character} to ${colour.name}`
+      );
+
+      if (
+        colour.hex.toLowerCase() ===
+        letterColours[index].toLowerCase()
+      ) {
+        colourButton.classList.add("selected");
+      }
+
+      colourButton.addEventListener("click", () => {
+        letterColours[index] = colour.hex;
+        letterPreview.style.color = colour.hex;
+        colourName.textContent = colour.name;
+
+        palette
+          .querySelectorAll(".letter-colour-button")
+          .forEach((button) => {
+            button.classList.remove("selected");
+          });
+
+        colourButton.classList.add("selected");
+
+        render();
+      });
+
+      palette.appendChild(colourButton);
+    });
+
+    control.appendChild(letterPreview);
+    control.appendChild(colourName);
+    control.appendChild(palette);
+
+    letterColorControls.appendChild(control);
+  });
+}
+
+// Change collection and replace every letter colour with colours
+// from the newly selected collection.
 collectionSelect.addEventListener("change", () => {
   activeCollection = collectionSelect.value;
   activePalette = collectionPalettes[activeCollection];
-  selectedColor = activePalette[0].hex;
-  customColor.value = selectedColor;
 
-  buildSwatches();
+  letterColours = createDefaultLetterColours(getCurrentText());
+
+  buildLetterControls();
   render();
 });
 
-// Add a custom colour to the currently selected collection.
-addCustom.addEventListener("click", () => {
-  const colour = customColor.value;
-
-  const colourAlreadyExists = activePalette.some(
-    (item) => item.hex.toLowerCase() === colour.toLowerCase()
-  );
-
-  if (!colourAlreadyExists) {
-    activePalette.unshift({
-      name: "Custom colour",
-      hex: colour
-    });
-  }
-
-  selectedColor = colour;
-
-  buildSwatches();
+// Update controls while the customer types.
+nameInput.addEventListener("input", () => {
+  buildLetterControls();
   render();
 });
 
-// Update the preview as the name is typed.
-nameInput.addEventListener("input", render);
-
-// Preview a custom colour while it is being selected.
-customColor.addEventListener("input", (event) => {
-  selectedColor = event.target.value;
-
-  document.querySelectorAll(".swatch").forEach((swatch) => {
-    swatch.classList.remove("selected");
-  });
-
-  render();
-});
-
-// Upload a background photo.
+// Upload a customer room photo.
 bgUpload.addEventListener("change", (event) => {
   const file = event.target.files[0];
 
@@ -157,7 +248,7 @@ bgUpload.addEventListener("change", (event) => {
     const image = new Image();
 
     image.onload = () => {
-      bgImage = image;
+      backgroundImage = image;
       render();
     };
 
@@ -169,143 +260,253 @@ bgUpload.addEventListener("change", (event) => {
 
 // Reset the visualiser.
 resetBtn.addEventListener("click", () => {
-  nameInput.value = "";
+  nameInput.value = "Carter";
 
   collectionSelect.value = "ceramic";
   activeCollection = "ceramic";
   activePalette = collectionPalettes.ceramic;
 
-  selectedColor = activePalette[0].hex;
-  customColor.value = selectedColor;
+  letterColours = createDefaultLetterColours(getCurrentText());
 
-  bgImage = null;
+  backgroundImage = null;
   bgUpload.value = "";
 
-  buildSwatches();
+  buildLetterControls();
   render();
 });
 
-// Download the preview as a PNG.
+// Download the canvas preview.
 downloadBtn.addEventListener("click", () => {
   render();
 
   const link = document.createElement("a");
-  const filename = (nameInput.value || "design").replace(/\s+/g, "_");
+  const filename =
+    getCurrentText().replace(/\s+/g, "_") || "letter-design";
 
   link.download = `${filename}.png`;
   link.href = previewCanvas.toDataURL("image/png");
   link.click();
 });
 
+// Draw an uploaded photo while preserving its proportions.
+function drawBackgroundImage(width, height) {
+  const canvasRatio = width / height;
+  const imageRatio =
+    backgroundImage.width / backgroundImage.height;
+
+  let sourceX = 0;
+  let sourceY = 0;
+  let sourceWidth = backgroundImage.width;
+  let sourceHeight = backgroundImage.height;
+
+  if (imageRatio > canvasRatio) {
+    const croppedWidth =
+      backgroundImage.height * canvasRatio;
+
+    sourceX =
+      (backgroundImage.width - croppedWidth) / 2;
+
+    sourceWidth = croppedWidth;
+  } else {
+    const croppedHeight =
+      backgroundImage.width / canvasRatio;
+
+    sourceY =
+      (backgroundImage.height - croppedHeight) / 2;
+
+    sourceHeight = croppedHeight;
+  }
+
+  ctx.drawImage(
+    backgroundImage,
+    sourceX,
+    sourceY,
+    sourceWidth,
+    sourceHeight,
+    0,
+    0,
+    width,
+    height
+  );
+}
+
+// Draw a simple neutral display background.
+function drawDefaultBackground(width, height) {
+  const gradient = ctx.createLinearGradient(
+    0,
+    0,
+    0,
+    height
+  );
+
+  gradient.addColorStop(0, "#ffffff");
+  gradient.addColorStop(1, "#f1efec");
+
+  roundRect(ctx, 0, 0, width, height, 24);
+
+  ctx.fillStyle = gradient;
+  ctx.fill();
+
+  ctx.strokeStyle = "#ddd7d1";
+  ctx.lineWidth = 2;
+
+  roundRect(ctx, 1, 1, width - 2, height - 2, 24);
+  ctx.stroke();
+}
+
+// Measure the complete name one character at a time.
+//
+// Measuring letters separately allows each letter to have a
+// different colour while keeping the entire name centred.
+function measureCharacters(text) {
+  const characters = Array.from(text);
+
+  const widths = characters.map((character) => {
+    return ctx.measureText(character).width;
+  });
+
+  const totalWidth = widths.reduce(
+    (total, width) => total + width,
+    0
+  );
+
+  return {
+    characters,
+    widths,
+    totalWidth
+  };
+}
+
+// Render the personalised name.
 function render() {
   const width = previewCanvas.width;
   const height = previewCanvas.height;
 
   ctx.clearRect(0, 0, width, height);
 
-  if (bgImage) {
-    const canvasRatio = width / height;
-    const imageRatio = bgImage.width / bgImage.height;
-
-    let sourceX = 0;
-    let sourceY = 0;
-    let sourceWidth = bgImage.width;
-    let sourceHeight = bgImage.height;
-
-    if (imageRatio > canvasRatio) {
-      const newWidth = bgImage.height * canvasRatio;
-      sourceX = (bgImage.width - newWidth) / 2;
-      sourceWidth = newWidth;
-    } else {
-      const newHeight = bgImage.width / canvasRatio;
-      sourceY = (bgImage.height - newHeight) / 2;
-      sourceHeight = newHeight;
-    }
-
-    ctx.drawImage(
-      bgImage,
-      sourceX,
-      sourceY,
-      sourceWidth,
-      sourceHeight,
-      0,
-      0,
-      width,
-      height
-    );
+  if (backgroundImage) {
+    drawBackgroundImage(width, height);
   } else {
-    ctx.save();
-    ctx.fillStyle = "#00000008";
-    ctx.fillRect(18, 18, width - 36, height - 36);
-    ctx.restore();
-
-    const gradient = ctx.createLinearGradient(0, 0, 0, height);
-    gradient.addColorStop(0, "#ffffff");
-    gradient.addColorStop(1, "#f0f2f4");
-
-    roundRect(ctx, 0, 0, width, height, 16);
-    ctx.fillStyle = gradient;
-    ctx.fill();
-
-    ctx.strokeStyle = "#d6dbe0";
-    ctx.lineWidth = 1;
-
-    roundRect(ctx, 0.5, 0.5, width - 1, height - 1, 16);
-    ctx.stroke();
+    drawDefaultBackground(width, height);
   }
 
-  const text = nameInput.value.trim() || "Sample Name";
+  const enteredText = getCurrentText();
+  const displayText = enteredText || "Sample Name";
 
-  let fontSize = Math.floor(height * 0.5);
+  if (!enteredText) {
+    letterColours = createDefaultLetterColours(displayText);
+  }
 
-  ctx.textAlign = "center";
+  let fontSize = Math.floor(height * 0.42);
+  const fontFamily = mochiFontLoaded
+    ? '"Mochi"'
+    : "sans-serif";
+
   ctx.textBaseline = "middle";
-  ctx.fillStyle = selectedColor;
+  ctx.textAlign = "left";
+  ctx.font = `${fontSize}px ${fontFamily}`;
 
-  ctx.font = `${fontSize}px "Mochi"`;
+  let measurement = measureCharacters(displayText);
 
   while (
-    ctx.measureText(text).width > width - 160 &&
-    fontSize > 10
+    measurement.totalWidth > width - 140 &&
+    fontSize > 20
   ) {
     fontSize -= 4;
-    ctx.font = `${fontSize}px "Mochi"`;
+    ctx.font = `${fontSize}px ${fontFamily}`;
+    measurement = measureCharacters(displayText);
   }
 
-  ctx.save();
-  ctx.shadowColor = "rgba(0, 0, 0, 0.15)";
-  ctx.shadowBlur = 8;
-  ctx.shadowOffsetY = 2;
-  ctx.fillStyle = selectedColor;
-  ctx.fillText(text, width / 2, height / 2);
-  ctx.restore();
+  let currentX =
+    width / 2 - measurement.totalWidth / 2;
 
-  ctx.lineWidth = Math.max(1, fontSize * 0.04);
-  ctx.strokeStyle = hexToRgba(selectedColor, 0.05);
-  ctx.strokeText(text, width / 2, height / 2);
+  measurement.characters.forEach(
+    (character, index) => {
+      const characterWidth = measurement.widths[index];
 
-  if (!mochiFontLoaded) {
-    console.log("Waiting for the Mochi Boom font to load.");
-  }
+      if (character !== " ") {
+        const colour =
+          letterColours[index] ||
+          activePalette[index % activePalette.length].hex;
+
+        ctx.save();
+
+        ctx.shadowColor = "rgba(0, 0, 0, 0.14)";
+        ctx.shadowBlur = 9;
+        ctx.shadowOffsetY = 3;
+
+        ctx.fillStyle = colour;
+        ctx.fillText(
+          character,
+          currentX,
+          height / 2
+        );
+
+        ctx.lineWidth = Math.max(
+          1,
+          fontSize * 0.025
+        );
+
+        ctx.strokeStyle = hexToRgba(colour, 0.08);
+
+        ctx.strokeText(
+          character,
+          currentX,
+          height / 2
+        );
+
+        ctx.restore();
+      }
+
+      currentX += characterWidth;
+    }
+  );
 }
 
 // Rounded rectangle helper.
-function roundRect(context, x, y, width, height, radius) {
+function roundRect(
+  context,
+  x,
+  y,
+  width,
+  height,
+  radius
+) {
   context.beginPath();
   context.moveTo(x + radius, y);
-  context.arcTo(x + width, y, x + width, y + height, radius);
-  context.arcTo(x + width, y + height, x, y + height, radius);
-  context.arcTo(x, y + height, x, y, radius);
-  context.arcTo(x, y, x + width, y, radius);
+  context.arcTo(
+    x + width,
+    y,
+    x + width,
+    y + height,
+    radius
+  );
+  context.arcTo(
+    x + width,
+    y + height,
+    x,
+    y + height,
+    radius
+  );
+  context.arcTo(
+    x,
+    y + height,
+    x,
+    y,
+    radius
+  );
+  context.arcTo(
+    x,
+    y,
+    x + width,
+    y,
+    radius
+  );
   context.closePath();
 }
 
-// Convert hex colour to RGBA.
+// Convert hex colour to transparent RGBA.
 function hexToRgba(hex, alpha = 1) {
-  if (!hex) {
-    return `rgba(0, 0, 0, ${alpha})`;
-  }
-
   const cleanedHex = hex.replace("#", "");
 
   const expandedHex =
@@ -325,12 +526,7 @@ function hexToRgba(hex, alpha = 1) {
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
 
-// Set initial colour-picker value.
-customColor.value = selectedColor;
-
-// Build the first palette.
-buildSwatches();
-
-// Load the font and render the visualiser.
+// Initial setup.
+letterColours = createDefaultLetterColours(getCurrentText());
 loadMochiFont();
 ```
