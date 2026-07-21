@@ -265,7 +265,7 @@ nameInput.addEventListener("input", (event) => {
 
 // Reset the visualiser.
 resetBtn.addEventListener("click", () => {
-  nameInput.value = "Carter";
+  nameInput.value = "NAME";
 
   collectionSelect.value = "ceramic";
   activeCollection = "ceramic";
@@ -396,7 +396,7 @@ function render() {
   }
 
   const enteredText = getCurrentText();
-  const displayText = enteredText || "WILD LITTLE THINGS";
+  const displayText = enteredText || "NAME";
 
   if (!enteredText) {
     letterColours = createDefaultLetterColours(displayText);
