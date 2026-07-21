@@ -396,7 +396,7 @@ function render() {
   }
 
   const enteredText = getCurrentText();
-  const displayText = enteredText || "Sample Name";
+  const displayText = enteredText || "WILD LITTLE THINGS";
 
   if (!enteredText) {
     letterColours = createDefaultLetterColours(displayText);
