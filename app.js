@@ -47,7 +47,6 @@ const letterColorControls = document.getElementById(
   "letterColorControls"
 );
 const previewCanvas = document.getElementById("previewCanvas");
-const bgUpload = document.getElementById("bgUpload");
 const resetBtn = document.getElementById("resetBtn");
 const downloadBtn = document.getElementById("downloadBtn");
 
@@ -262,30 +261,6 @@ nameInput.addEventListener("input", (event) => {
     buildLetterControls();
     render();
   }, 0);
-});
-
-// Upload a customer room photo.
-bgUpload.addEventListener("change", (event) => {
-  const file = event.target.files[0];
-
-  if (!file) {
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = () => {
-    const image = new Image();
-
-    image.onload = () => {
-      backgroundImage = image;
-      render();
-    };
-
-    image.src = reader.result;
-  };
-
-  reader.readAsDataURL(file);
 });
 
 // Reset the visualiser.
