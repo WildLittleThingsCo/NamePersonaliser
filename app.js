@@ -348,7 +348,7 @@ resetBtn.addEventListener("click", () => {
 
   letterColours = createDefaultLetterColours(getCurrentText());
 
-  selectedLetterIndex = 0;
+  selectedLetterIndex = null;
 
   buildLetterControls();
   render();
