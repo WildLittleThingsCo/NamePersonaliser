@@ -62,7 +62,7 @@ let mochiFontLoaded = false;
 // Load Mochi Boom for both the controls and canvas.
 const mochiFont = new FontFace(
   "Mochi",
-  'url("MochiBoom.ttf")'
+  'url("./MochiBoom.ttf")'
 );
 
 async function loadMochiFont() {
@@ -244,11 +244,9 @@ collectionSelect.addEventListener("change", () => {
 });
 
 // Update controls while the customer types.
-nameInput.addEventListener("input", () => {
-  let value = nameInput.value;
-  
+nameInput.addEventListener("input", (event) => {
   // Remove any numbers
-  value = value.replace(/[0-9]/g, "");
+  let value = event.target.value.replace(/[0-9]/g, "");
   
   // Convert to uppercase
   value = value.toUpperCase();
@@ -256,8 +254,11 @@ nameInput.addEventListener("input", () => {
   // Update the input
   nameInput.value = value;
   
-  buildLetterControls();
-  render();
+  // Small delay to ensure value is updated
+  setTimeout(() => {
+    buildLetterControls();
+    render();
+  }, 0);
 });
 
 // Upload a customer room photo.
