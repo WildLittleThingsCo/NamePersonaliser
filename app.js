@@ -421,7 +421,7 @@ function render() {
 drawDefaultBackground(width, height);
 
   const enteredText = getCurrentText();
-  const displayText = enteredText || "SAMPLE NAME";
+  const displayText = enteredText || "WILD LITTLE THINGS & CO";
 
   let displayColours;
 
