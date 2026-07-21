@@ -42,6 +42,19 @@ const collectionPalettes = {
 };
 
 const nameInput = document.getElementById("nameInput");
+// Convert to uppercase and remove numbers
+nameInput.addEventListener("input", (event) => {
+  let value = event.target.value;
+  
+  // Remove any numbers
+  value = value.replace(/[0-9]/g, "");
+  
+  // Convert to uppercase
+  value = value.toUpperCase();
+  
+  // Update the input
+  nameInput.value = value;
+});
 const collectionSelect = document.getElementById("collectionSelect");
 const letterColorControls = document.getElementById(
   "letterColorControls"
