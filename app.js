@@ -312,13 +312,16 @@ function buildSharedPalette() {
       button.classList.add("selected");
     }
 
-    button.addEventListener("click", () => {
-      letterColours[selectedLetterIndex] = colour.hex;
+   button.addEventListener("click", () => {
+  letterColours[selectedLetterIndex] = colour.hex;
 
-      buildLetterControls();
-      render();
-    });
+  selectedLetterIndex = null;
+  sharedPalettePanel.classList.add("hidden");
 
+  buildLetterControls();
+  render();
+});
+    
     sharedPalette.appendChild(button);
   });
 }
