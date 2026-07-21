@@ -1,5 +1,6 @@
 // Wild Little Things & Co personalised letter visualiser.
-// Each letter can have its own colour from the selected collection.
+// Each letter displays one colour circle.
+// Clicking a circle opens one shared palette.
 
 const collectionPalettes = {
   ceramic: [
@@ -43,9 +44,10 @@ const collectionPalettes = {
 
 const nameInput = document.getElementById("nameInput");
 const collectionSelect = document.getElementById("collectionSelect");
-const letterColorControls = document.getElementById(
-  "letterColorControls"
-);
+const letterColorControls = document.getElementById("letterColorControls");
+const sharedPalettePanel = document.getElementById("sharedPalettePanel");
+const selectedLetterLabel = document.getElementById("selectedLetterLabel");
+const sharedPalette = document.getElementById("sharedPalette");
 const previewCanvas = document.getElementById("previewCanvas");
 const resetBtn = document.getElementById("resetBtn");
 const downloadBtn = document.getElementById("downloadBtn");
@@ -55,6 +57,7 @@ const ctx = previewCanvas.getContext("2d");
 let activeCollection = collectionSelect.value;
 let activePalette = collectionPalettes[activeCollection];
 let letterColours = [];
+let selectedLetterIndex = null;
 let backgroundImage = null;
 let mochiFontLoaded = false;
 
@@ -91,9 +94,6 @@ function getCurrentText() {
 }
 
 // Give each typed character a default colour.
-//
-// Colours rotate through the selected collection so names begin
-// with a balanced rainbow or neutral colour pattern.
 function createDefaultLetterColours(text) {
   return Array.from(text).map((character, index) => {
     if (character === " ") {
@@ -106,18 +106,27 @@ function createDefaultLetterColours(text) {
 
 // Find the full colour information using a hex value.
 function findColour(hex) {
+  if (!hex) {
+    return null;
+  }
+
   return activePalette.find(
     (colour) => colour.hex.toLowerCase() === hex.toLowerCase()
   );
 }
 
-// Keep existing colour choices when the customer adds letters.
-//
-// Example:
-// CART → CARTER
-//
-// The first four colour selections are preserved and the new
-// letters receive the next colours in the collection.
+// Check if a colour exists in the active palette.
+function colourExistsInActivePalette(hex) {
+  if (!hex) {
+    return false;
+  }
+
+  return activePalette.some(
+    (colour) => colour.hex.toLowerCase() === hex.toLowerCase()
+  );
+}
+
+// Keep existing colour choices when the customer adds or removes letters.
 function syncLetterColours() {
   const characters = Array.from(getCurrentText());
 
@@ -127,14 +136,8 @@ function syncLetterColours() {
     }
 
     const existingColour = letterColours[index];
-    const existingColourIsAvailable =
-      existingColour &&
-      activePalette.some(
-        (colour) =>
-          colour.hex.toLowerCase() === existingColour.toLowerCase()
-      );
 
-    if (existingColourIsAvailable) {
+    if (existingColour && colourExistsInActivePalette(existingColour)) {
       return existingColour;
     }
 
@@ -142,28 +145,52 @@ function syncLetterColours() {
   });
 }
 
-// Create the clickable palette beneath each letter.
+// Select a letter to open the shared palette.
+function selectLetter(index) {
+  selectedLetterIndex = index;
+
+  buildLetterControls();
+  buildSharedPalette();
+}
+
+// Create the clickable letter controls with colour circles.
 function buildLetterControls() {
   const text = getCurrentText();
 
   letterColorControls.innerHTML = "";
 
   if (!text) {
+    selectedLetterIndex = null;
+    letterColours = [];
+
     const message = document.createElement("p");
 
     message.className = "section-description";
-    message.textContent =
-      "Enter a name above to begin choosing colours.";
+    message.textContent = "Enter a name above to begin choosing colours.";
 
     letterColorControls.appendChild(message);
-    letterColours = [];
+
+    sharedPalettePanel.classList.add("hidden");
 
     return;
   }
 
   syncLetterColours();
 
-  Array.from(text).forEach((character, index) => {
+  const characters = Array.from(text);
+
+  const validSelectedLetter =
+    selectedLetterIndex !== null &&
+    characters[selectedLetterIndex] &&
+    characters[selectedLetterIndex] !== " ";
+
+  if (!validSelectedLetter) {
+    selectedLetterIndex = characters.findIndex(
+      (character) => character !== " "
+    );
+  }
+
+  characters.forEach((character, index) => {
     if (character === " ") {
       return;
     }
@@ -171,101 +198,150 @@ function buildLetterControls() {
     const control = document.createElement("div");
     control.className = "letter-control";
 
+    if (index === selectedLetterIndex) {
+      control.classList.add("selected");
+    }
+
     const letterPreview = document.createElement("div");
     letterPreview.className = "letter-character";
     letterPreview.textContent = character;
     letterPreview.style.color = letterColours[index];
 
+    letterPreview.addEventListener("click", () => {
+      selectLetter(index);
+    });
+
+    const colourButton = document.createElement("button");
+    colourButton.type = "button";
+    colourButton.className = "current-colour-button";
+    colourButton.style.backgroundColor = letterColours[index];
+
     const selectedColour = findColour(letterColours[index]);
+    colourButton.title = selectedColour ? selectedColour.name : "Choose colour";
+
+    colourButton.setAttribute(
+      "aria-label",
+      `Choose colour for ${character}`
+    );
+
+    colourButton.addEventListener("click", () => {
+      selectLetter(index);
+    });
 
     const colourName = document.createElement("div");
     colourName.className = "letter-colour-name";
-    colourName.textContent = selectedColour
-      ? selectedColour.name
-      : "Colour";
-
-    const palette = document.createElement("div");
-    palette.className = "letter-palette";
-
-    activePalette.forEach((colour) => {
-      const colourButton = document.createElement("button");
-
-      colourButton.type = "button";
-      colourButton.className = "letter-colour-button";
-      colourButton.style.backgroundColor = colour.hex;
-      colourButton.title = colour.name;
-      colourButton.setAttribute(
-        "aria-label",
-        `Set ${character} to ${colour.name}`
-      );
-
-      if (
-        colour.hex.toLowerCase() ===
-        letterColours[index].toLowerCase()
-      ) {
-        colourButton.classList.add("selected");
-      }
-
-      colourButton.addEventListener("click", () => {
-        letterColours[index] = colour.hex;
-        letterPreview.style.color = colour.hex;
-        colourName.textContent = colour.name;
-
-        palette
-          .querySelectorAll(".letter-colour-button")
-          .forEach((button) => {
-            button.classList.remove("selected");
-          });
-
-        colourButton.classList.add("selected");
-
-        render();
-      });
-
-      palette.appendChild(colourButton);
-    });
+    colourName.textContent = selectedColour ? selectedColour.name : "Choose colour";
 
     control.appendChild(letterPreview);
+    control.appendChild(colourButton);
     control.appendChild(colourName);
-    control.appendChild(palette);
 
     letterColorControls.appendChild(control);
   });
+
+  buildSharedPalette();
 }
 
-// Change collection and replace every letter colour with colours
-// from the newly selected collection.
+// Build the shared palette panel that appears below the letter controls.
+function buildSharedPalette() {
+  sharedPalette.innerHTML = "";
+
+  const text = getCurrentText();
+  const characters = Array.from(text);
+
+  if (
+    selectedLetterIndex === null ||
+    !characters[selectedLetterIndex] ||
+    characters[selectedLetterIndex] === " "
+  ) {
+    sharedPalettePanel.classList.add("hidden");
+    return;
+  }
+
+  sharedPalettePanel.classList.remove("hidden");
+
+  const selectedCharacter = characters[selectedLetterIndex];
+
+  selectedLetterLabel.textContent = `Choose a colour for ${selectedCharacter}`;
+
+  activePalette.forEach((colour) => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = "shared-colour-button";
+
+    button.style.backgroundColor = colour.hex;
+    button.title = colour.name;
+
+    button.setAttribute(
+      "aria-label",
+      `Set ${selectedCharacter} to ${colour.name}`
+    );
+
+    const currentColour = letterColours[selectedLetterIndex];
+
+    if (
+      currentColour &&
+      colour.hex.toLowerCase() === currentColour.toLowerCase()
+    ) {
+      button.classList.add("selected");
+    }
+
+    button.addEventListener("click", () => {
+      letterColours[selectedLetterIndex] = colour.hex;
+
+      buildLetterControls();
+      render();
+    });
+
+    sharedPalette.appendChild(button);
+  });
+}
+
+// Change collection and replace every letter colour with colours from the newly selected collection.
 collectionSelect.addEventListener("change", () => {
   activeCollection = collectionSelect.value;
   activePalette = collectionPalettes[activeCollection];
 
   letterColours = createDefaultLetterColours(getCurrentText());
 
+  selectedLetterIndex = null;
+
   buildLetterControls();
   render();
 });
 
 // Update controls while the customer types.
-nameInput.addEventListener("input", (event) => {
+nameInput.addEventListener("input", () => {
+  let value = nameInput.value;
+  
   // Remove any numbers
-  let value = event.target.value.replace(/[0-9]/g, "");
+  value = value.replace(/[0-9]/g, "");
   
   // Convert to uppercase
   value = value.toUpperCase();
   
   // Update the input
   nameInput.value = value;
-  
-  // Small delay to ensure value is updated
-  setTimeout(() => {
-    buildLetterControls();
-    render();
-  }, 0);
+
+  syncLetterColours();
+
+  const text = getCurrentText();
+
+  if (
+    selectedLetterIndex !== null &&
+    selectedLetterIndex >= text.length
+  ) {
+    selectedLetterIndex = null;
+  }
+
+  buildLetterControls();
+  render();
 });
 
 // Reset the visualiser.
 resetBtn.addEventListener("click", () => {
-  nameInput.value = "NAME";
+  nameInput.value = "CARTER";
 
   collectionSelect.value = "ceramic";
   activeCollection = "ceramic";
@@ -273,8 +349,8 @@ resetBtn.addEventListener("click", () => {
 
   letterColours = createDefaultLetterColours(getCurrentText());
 
+  selectedLetterIndex = 0;
   backgroundImage = null;
-  bgUpload.value = "";
 
   buildLetterControls();
   render();
@@ -360,9 +436,6 @@ function drawDefaultBackground(width, height) {
 }
 
 // Measure the complete name one character at a time.
-//
-// Measuring letters separately allows each letter to have a
-// different colour while keeping the entire name centred.
 function measureCharacters(text) {
   const characters = Array.from(text);
 
@@ -396,10 +469,15 @@ function render() {
   }
 
   const enteredText = getCurrentText();
-  const displayText = enteredText || "NAME";
+  const displayText = enteredText || "SAMPLE NAME";
 
-  if (!enteredText) {
-    letterColours = createDefaultLetterColours(displayText);
+  let displayColours;
+
+  if (enteredText) {
+    syncLetterColours();
+    displayColours = letterColours;
+  } else {
+    displayColours = createDefaultLetterColours(displayText);
   }
 
   let fontSize = Math.floor(height * 0.42);
@@ -431,7 +509,7 @@ function render() {
 
       if (character !== " ") {
         const colour =
-          letterColours[index] ||
+          displayColours[index] ||
           activePalette[index % activePalette.length].hex;
 
         ctx.save();

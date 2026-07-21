@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Wild Little Things & Co</title>
   <link rel="stylesheet" href="styles.css" />
-  <!-- Optional: add Google Fonts or your licensed fonts here -->
 </head>
 <body>
   <main class="container">
@@ -50,37 +49,19 @@
     </div>
 
     <p class="section-description">
-      Select colour for each letter to create your design.
-    </p>
-
-   <div class="letter-customiser">
-  <div class="section-heading">
-    Choose each letter colour
-  </div>
-
-  <p class="section-description">
-    Tap a colour circle beneath a letter to customise it.
-  </p>
-
-  <div
-    id="letterColorControls"
-    class="letter-color-controls"
-  ></div>
-
-  <div
-    id="sharedPalettePanel"
-    class="shared-palette-panel hidden"
-  >
-    <p id="selectedLetterLabel" class="selected-letter-label">
-      Choose a colour
+      Click a letter to choose its colour.
     </p>
 
     <div
-      id="sharedPalette"
-      class="shared-palette"
+      id="letterColorControls"
+      class="letter-color-controls"
     ></div>
+
+    <div id="sharedPalettePanel" class="shared-palette-panel hidden">
+      <div id="selectedLetterLabel" class="selected-letter-label"></div>
+      <div id="sharedPalette" class="shared-palette"></div>
+    </div>
   </div>
-</div>
 
   <div class="action-buttons">
     <button id="resetBtn" type="button">
