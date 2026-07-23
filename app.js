@@ -54,7 +54,6 @@ const copyBtn = document.getElementById("copyBtn");
 const summaryName = document.getElementById("summaryName");
 const summaryCollection = document.getElementById("summaryCollection");
 const summaryColours = document.getElementById("summaryColours");
-const copyTextPreview = document.getElementById("copyTextPreview");
 const copyConfirmation = document.getElementById("copyConfirmation");
 
 const ctx = previewCanvas.getContext("2d");
