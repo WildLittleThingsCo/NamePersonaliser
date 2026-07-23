@@ -360,16 +360,15 @@ function getDesignSummary() {
     })
     .filter(Boolean);
 
-  const copyText = name
-    ? [
-        `Name: ${name}`,
-        `Collection: ${collection}`,
-        `Colours: ${colours
-          .map((item) => `${item.letter}-${item.name}`)
-          .join(", ")}`
-      ].join("\n")
-    : "Enter a name and choose your colours before copying your design.";
-
+ const copyText = name
+  ? [
+      `Name and colours: ${name}: ${colours
+        .map((item) => `${item.letter}-${item.name}`)
+        .join(", ")}`,
+      `Collection: ${collection}`
+    ].join("\n")
+  : "Enter a name and choose your colours before copying your design.";
+  
   return {
     name,
     collection,
