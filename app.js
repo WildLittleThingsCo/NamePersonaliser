@@ -406,27 +406,15 @@ function updateOrderSummary() {
     return;
   }
 
-  design.colours.forEach((item) => {
-    const row = document.createElement("div");
-    row.className = "summary-colour-row";
+  const colourSummary = document.createElement("p");
 
-    const dot = document.createElement("span");
-    dot.className = "summary-colour-dot";
-    dot.style.backgroundColor = item.hex;
+  colourSummary.className = "summary-copy-text";
 
-    const letter = document.createElement("span");
-    letter.className = "summary-letter";
-    letter.textContent = `${item.letter} •`;
+  colourSummary.textContent = design.colours
+    .map((item) => `${item.letter}-${item.name}`)
+    .join(", ");
 
-    const colourName = document.createElement("span");
-    colourName.textContent = item.name;
-
-    row.appendChild(dot);
-    row.appendChild(letter);
-    row.appendChild(colourName);
-
-    summaryColours.appendChild(row);
-  });
+  summaryColours.appendChild(colourSummary);
 }
 // Change collection and replace each letter with colours
 // from the newly selected collection.
