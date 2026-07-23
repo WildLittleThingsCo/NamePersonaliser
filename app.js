@@ -394,9 +394,6 @@ function updateOrderSummary() {
   summaryName.textContent =
     design.name || "Enter your name";
 
-  summaryCollection.textContent =
-    design.collection || "Select a collection";
-
   if (design.colourText) {
     summaryColours.textContent =
       design.colourText;
