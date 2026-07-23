@@ -418,6 +418,15 @@ h1{margin:0 0 12px 0;font-size:20px}
   box-sizing: border-box;
 }
 
+.section-heading,
+.step-block {
+    text-align: center;
+}
+
+.step-block label {
+    text-align: center;
+}
+
 @media (max-width: 650px) {
   .setup-section,
   .preview-section,
