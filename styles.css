@@ -680,11 +680,10 @@ h1{margin:0 0 12px 0;font-size:20px}
 }
 /* STEP 4 — match the other coloured sections */
 .order-section {
-  width: 100%;
-  margin: 32px 0;
-  padding: 34px 28px;
-  box-sizing: border-box;
-
+    max-width: 980px;
+    margin: 48px auto;
+    padding: 34px;
+}
   background: #eef7ed;
   border: 2px solid #9fc79e;
   border-radius: 24px;
@@ -733,7 +732,7 @@ h1{margin:0 0 12px 0;font-size:20px}
 /* Inner summary box */
 .order-summary {
   margin-top: 24px;
-  padding: 26px 22px;
+  padding: 26px 30px;
 
   background: rgba(255, 255, 255, 0.75);
   border: 1px solid #c8d8c3;
@@ -768,6 +767,11 @@ h1{margin:0 0 12px 0;font-size:20px}
   font-size: 1rem;
   line-height: 1.8;
   overflow-wrap: anywhere;
+}
+.summary-divider {
+    height: 1px;
+    background: #ebe7e3;
+    margin: 28px 0;
 }
 
 /* Buttons */
