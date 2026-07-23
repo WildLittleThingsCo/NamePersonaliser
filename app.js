@@ -337,6 +337,9 @@ function buildSharedPalette() {
 function getDesignSummary() {
   const name = getCurrentText().toUpperCase();
 
+  // Make sure the colour array matches the current name.
+  syncLetterColours();
+
   const selectedOption =
     collectionSelect.options[collectionSelect.selectedIndex];
 
@@ -344,31 +347,42 @@ function getDesignSummary() {
     ? selectedOption.textContent.trim()
     : "Collection not selected";
 
-  const colours = Array.from(name)
-    .map((letter, index) => {
-      if (letter === " ") {
-        return null;
-      }
+  const characters = Array.from(name);
+  const colours = [];
 
-      const colour = findColour(letterColours[index]);
+  characters.forEach((letter, index) => {
+    if (letter === " ") {
+      return;
+    }
 
-      return {
-        letter,
-        name: colour ? colour.name : "Colour not selected",
-        hex: letterColours[index] || "#ffffff"
-      };
-    })
-    .filter(Boolean);
+    const selectedHex =
+      letterColours[index] ||
+      activePalette[index % activePalette.length].hex;
 
- const copyText = name
-  ? [
-      `Name and colours: ${name}: ${colours
-        .map((item) => `${item.letter}-${item.name}`)
-        .join(", ")}`,
-      `Collection: ${collection}`
-    ].join("\n")
-  : "Enter a name and choose your colours before copying your design.";
-  
+    const colourDetails =
+      activePalette.find(
+        (colour) =>
+          colour.hex.toLowerCase() === selectedHex.toLowerCase()
+      );
+
+    colours.push({
+      letter: letter,
+      name: colourDetails
+        ? colourDetails.name
+        : "Colour not selected",
+      hex: selectedHex
+    });
+  });
+
+  const copyText = name
+    ? [
+        `Name and colours: ${name}: ${colours
+          .map((item) => `${item.letter}-${item.name}`)
+          .join(", ")}`,
+        `Collection: ${collection}`
+      ].join("\n")
+    : "Enter a name and choose your colours before copying your design.";
+
   return {
     name,
     collection,
