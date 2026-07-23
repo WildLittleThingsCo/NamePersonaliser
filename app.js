@@ -52,7 +52,6 @@ const previewCanvas = document.getElementById("previewCanvas");
 const resetBtn = document.getElementById("resetBtn");
 const copyBtn = document.getElementById("copyBtn");
 const summaryName = document.getElementById("summaryName");
-const summaryCollection = document.getElementById("summaryCollection");
 const summaryColours = document.getElementById("summaryColours");
 const copyConfirmation = document.getElementById("copyConfirmation");
 
@@ -336,7 +335,6 @@ function buildSharedPalette() {
 function getDesignSummary() {
   const name = getCurrentText().toUpperCase();
 
-  // Make sure the colour array matches the current name.
   syncLetterColours();
 
   const selectedOption =
@@ -344,12 +342,11 @@ function getDesignSummary() {
 
   const collection = selectedOption
     ? selectedOption.textContent.trim()
-    : "Collection not selected";
+    : "";
 
-  const characters = Array.from(name);
   const colours = [];
 
-  characters.forEach((letter, index) => {
+  Array.from(name).forEach((letter, index) => {
     if (letter === " ") {
       return;
     }
@@ -358,36 +355,39 @@ function getDesignSummary() {
       letterColours[index] ||
       activePalette[index % activePalette.length].hex;
 
-    const colourDetails =
-      activePalette.find(
-        (colour) =>
-          colour.hex.toLowerCase() === selectedHex.toLowerCase()
+    const colourDetails = activePalette.find((colour) => {
+      return (
+        colour.hex.toLowerCase() ===
+        selectedHex.toLowerCase()
       );
+    });
 
     colours.push({
-      letter: letter,
-      name: colourDetails
+      letter,
+      colourName: colourDetails
         ? colourDetails.name
         : "Colour not selected",
       hex: selectedHex
     });
   });
 
-const copyText = name
-  ? `Name and colours: ${name}: ${colours
-      .map((item) => `${item.letter}-${item.name}`)
-      .join(", ")}`
-  : "Enter a name and choose your colours before copying your design.";
+  const colourText = colours
+    .map((item) => `${item.letter}-${item.colourName}`)
+    .join(", ");
+
+  const copyText = name
+    ? `Name and colours: ${name}: ${colourText}`
+    : "";
 
   return {
     name,
     collection,
     colours,
+    colourText,
     copyText
   };
 }
 
-// Update the visible order summary.
 function updateOrderSummary() {
   const design = getDesignSummary();
 
@@ -395,24 +395,15 @@ function updateOrderSummary() {
     design.name || "Enter your name";
 
   summaryCollection.textContent =
-    design.collection;
+    design.collection || "Select a collection";
 
-  summaryColours.innerHTML = "";
-
-  if (!design.colours || design.colours.length === 0) {
+  if (design.colourText) {
+    summaryColours.textContent =
+      design.colourText;
+  } else {
     summaryColours.textContent =
       "Enter a name to view your colour selection.";
-    return;
   }
-
-  const colourSummary = document.createElement("p");
-  colourSummary.className = "summary-copy-text";
-
-  colourSummary.textContent = design.colours
-    .map((item) => `${item.letter}-${item.name}`)
-    .join(", ");
-
-  summaryColours.appendChild(colourSummary);
 }
 // Change collection and replace each letter with colours
 // from the newly selected collection.
