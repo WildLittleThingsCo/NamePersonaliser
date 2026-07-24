@@ -580,251 +580,90 @@ h1{margin:0 0 12px 0;font-size:20px}
     padding: 14px;
   }
 }
-/* Step 4 – Order summary */
-.order-section {
-  width: 100%;
-  max-width: 900px;      /* Makes it narrower */
-  margin: 48px auto;     /* Centres it and adds more space above/below */
+/* ============================
+   STEP 4
+============================ */
 
-  padding: 30px 32px;    /* Slightly less vertical padding */
+.order-section{
+    width:100%;
+    max-width:900px;          /* same width as Step 3 */
+    margin:36px auto;
+    padding:26px;
 
-  box-sizing: border-box;
+    background:#eef7ed;
+    border:2px solid #9fc79e;
+    border-radius:22px;
 
-  background: #eef7ed;   /* Soft sage green */
-  border: 2px solid #9fc79e;
-  border-radius: 24px;
-
-  box-shadow: 0 4px 12px rgba(0,0,0,.05);
-}
-.step-heading {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 24px;
+    box-sizing:border-box;
 }
 
-.step-number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 42px;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #4f4641;
-  color: #ffffff;
-  font-weight: 700;
+.order-section .step-heading{
+    text-align:center;
+    margin-bottom:24px;
 }
 
-.step-heading h2 {
-  margin: 0 0 6px;
+.order-section .step-number{
+    margin:0 0 6px;
+    color:#7c6b61;
+    font-size:.75rem;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
 }
 
-.step-heading p {
-  margin: 0;
-  line-height: 1.6;
+.order-section h2{
+    margin:0;
+    font-size:2rem;
 }
 
-.order-summary {
-  display: block;
-  margin-top: 22px;
-  padding: 24px;
-  background: #b5dcb9;
-  border-radius: 18px;
+.order-section .step-heading p{
+    margin-top:10px;
+    color:#6d625d;
 }
 
-.summary-group {
-  display: block;
+.order-summary{
+    margin-top:24px;
+    padding:24px;
+
+    background:#ffffff;
+    border:1px solid #dcd5cf;
+    border-radius:18px;
 }
 
-.summary-group + .summary-group {
-  margin-top: 22px;
+.summary-group + .summary-group{
+    margin-top:24px;
 }
 
-.summary-label {
-  display: block;
-  margin-bottom: 7px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.summary-label{
+    margin-bottom:8px;
+    display:block;
+
+    color:#8f7c72;
+    font-size:.78rem;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
 }
 
-.summary-group p {
-  display: block;
-  margin: 0;
-  line-height: 1.7;
+#summaryName{
+    font-size:1.8rem;
+    font-weight:700;
+    color:#4f4641;
 }
 
-.order-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 22px;
+#summaryColours{
+    margin-top:4px;
+    line-height:1.8;
 }
 
-.copy-confirmation {
-  min-height: 24px;
-  margin: 14px 0 0;
-  text-align: center;
+.order-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:20px;
 }
 
-@media (max-width: 600px) {
-  .order-section {
-    padding: 20px;
-  }
-
-  .order-actions {
-    flex-direction: column;
-  }
-
-  .order-actions button {
-    width: 100%;
-  }
-}
-/* STEP 4 — match the other coloured sections */
-.order-section {
-    max-width: 980px;
-    margin: 48px auto;
-    padding: 34px;
-}
-  background: #eef7ed;
-  border: 2px solid #9fc79e;
-  border-radius: 24px;
-
-  box-shadow: 0 3px 8px rgba(82, 67, 60, 0.08);
-}
-
-/* Centre the Step 4 heading like the other steps */
-.order-section .step-heading {
-  display: block;
-  margin-bottom: 24px;
-  text-align: center;
-}
-
-.order-section .step-number {
-  display: block;
-  width: auto;
-  height: auto;
-  margin: 0 0 8px;
-
-  background: transparent;
-  color: #765d50;
-  border-radius: 0;
-
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.order-section .step-number::before {
-  content: "STEP ";
-}
-
-.order-section .step-heading h2 {
-  margin: 0 0 8px;
-  font-size: 1.65rem;
-}
-
-.order-section .step-heading p {
-  margin: 0;
-  font-weight: 600;
-  color: #62564f;
-}
-
-/* Inner summary box */
-.order-summary {
-  margin-top: 24px;
-  padding: 26px 30px;
-
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid #c8d8c3;
-  border-radius: 18px;
-}
-
-.summary-group + .summary-group {
-  margin-top: 24px;
-}
-
-.summary-label {
-  display: block;
-  margin-bottom: 8px;
-
-  color: #8b6a59;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
-#summaryName {
-  margin: 0;
-  color: #4f4641;
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-#summaryColours {
-  margin: 0;
-  color: #4f4641;
-  font-size: 1rem;
-  line-height: 1.8;
-  overflow-wrap: anywhere;
-}
-.summary-divider {
-    height: 1px;
-    background: #ebe7e3;
-    margin: 28px 0;
-}
-
-/* Buttons */
-.order-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 22px;
-}
-
-.order-actions button {
-  min-height: 46px;
-  padding: 11px 18px;
-
-  border-radius: 12px;
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.secondary-button {
-  background: #ffffff;
-  border: 2px solid #6a5a52;
-  color: #4f4641;
-}
-
-.primary-button {
-  background: #574c46;
-  border: 2px solid #574c46;
-  color: #ffffff;
-}
-
-.order-actions button:hover {
-  transform: translateY(-1px);
-}
-
-.copy-confirmation {
-  min-height: 24px;
-  margin: 16px 0 0;
-  text-align: center;
-  color: #64763f;
-  font-weight: 700;
-}
-
-@media (max-width: 600px) {
-  .order-section {
-    padding: 26px 18px;
-  }
-
-  .order-actions {
-    grid-template-columns: 1fr;
-  }
+.order-actions button{
+    height:48px;
+    border-radius:12px;
 }
