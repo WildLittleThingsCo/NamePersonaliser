@@ -586,9 +586,9 @@ h1{margin:0 0 12px 0;font-size:20px}
 
 .order-section{
     width:100%;
-    max-width:900px;          /* same width as Step 3 */
-    margin:36px auto;
-    padding:26px;
+    max-width:900px;
+    margin:24px auto;      /* less gap above and below */
+    padding:22px 24px;     /* less padding inside */
 
     background:#eef7ed;
     border:2px solid #9fc79e;
