@@ -667,3 +667,31 @@ h1{margin:0 0 12px 0;font-size:20px}
     height:48px;
     border-radius:12px;
 }
+.top-links{
+    max-width:900px;
+    margin:20px auto 30px;
+
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+}
+
+.top-links a{
+    text-decoration:none;
+    color:#5b463a;
+
+    background:#ffffff;
+    border:1px solid #e4ddd7;
+    border-radius:999px;
+
+    padding:10px 18px;
+    font-weight:600;
+
+    transition:.2s;
+}
+
+.top-links a:hover{
+    transform:translateY(-2px);
+    background:#f8f4f1;
+}
