@@ -695,3 +695,23 @@ h1{margin:0 0 12px 0;font-size:20px}
     transform:translateY(-2px);
     background:#f8f4f1;
 }
+.etsy-button {
+    display: block;
+    width: 100%;
+    margin: 20px 0;
+    padding: 14px 18px;
+
+    background: #F1641E;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 12px;
+
+    transition: 0.2s ease;
+}
+
+.etsy-button:hover {
+    background: #d95616;
+    transform: translateY(-1px);
+}
