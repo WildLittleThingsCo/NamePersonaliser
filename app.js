@@ -24,7 +24,7 @@ const collectionPalettes = {
     { name: "Chocolate", hex: "#3a2416" },
     { name: "Latte", hex: "#ceb9a8" },
     { name: "Charcoal", hex: "#000000" },
-    { name: "Ivory White", hex: "#ffffff" }
+    { name: "Ivory White", hex: "#ffffff" },
     { name: "Olive", hex: "#2b3a1e" }
 
   ],
@@ -40,7 +40,7 @@ const collectionPalettes = {
     { name: "Soft Pink", hex: "#deb3ce" },
     { name: "Ice Blue", hex: "#b0d6e1" },
     { name: "Lilac", hex: "#a896c6" },
-    { name: "Lemon", hex: "#f3dc74" }
+    { name: "Lemon", hex: "#f3dc74" },
     { name: "Olive", hex: "#2b3a1e" }
 
   ],
