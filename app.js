@@ -644,10 +644,10 @@ function render() {
 
        ctx.save();
 
-ctx.shadowColor = "rgba(0, 0, 0, 0.14)";
-ctx.shadowBlur = 9;
-ctx.shadowOffsetY = 3;
-
+ctx.shadowColor = "rgba(0, 0, 0, 0.20)";
+ctx.shadowBlur = 14;
+ctx.shadowOffsetX = 4;
+ctx.shadowOffsetY = 7;
 ctx.fillStyle = colour;
 
 ctx.fillText(
@@ -674,11 +674,12 @@ ctx.strokeText(
 
 if (collectionSelect.value === "ceramic") {
   drawGlossyFinish(
-    character,
-    currentX,
-    height / 2,
-    fontSize
-  );
+  character,
+  currentX,
+  height / 2,
+  fontSize,
+  colour
+);
 }
 
 if (collectionSelect.value === "wildBear") {
