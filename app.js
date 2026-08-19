@@ -770,42 +770,6 @@ function drawGlossyFinish(
     y - fontSize * 0.35;
 
 
-  // --------------------------------
-  // 4. CURVED VERTICAL SHINE
-  // --------------------------------
-
-  ctx.globalAlpha = 0.72;
-
-  ctx.strokeStyle =
-    "rgba(255, 255, 255, 0.95)";
-
-  ctx.lineWidth = Math.max(
-    1.5,
-    fontSize * 0.014
-  );
-
-  ctx.lineCap = "round";
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    highlightX,
-    highlightY
-  );
-
-  ctx.bezierCurveTo(
-    highlightX - fontSize * 0.008,
-    highlightY + fontSize * 0.025,
-
-    highlightX - fontSize * 0.010,
-    highlightY + fontSize * 0.060,
-
-    highlightX + fontSize * 0.002,
-    highlightY + fontSize * 0.090
-  );
-
-  ctx.stroke();
-
 
   // --------------------------------
   // 5. SMALL CERAMIC REFLECTION DOT
