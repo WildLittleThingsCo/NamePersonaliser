@@ -738,7 +738,7 @@ function drawGlossyFinish(
   );
 
 // 3. Main ceramic highlight
-const highlightX = x + fontSize * 0.053;
+const highlightX = x + fontSize * 0.06;
 const highlightY = y - fontSize * 0.35;
 
 ctx.globalAlpha = 0.78;
