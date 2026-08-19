@@ -710,25 +710,15 @@ function drawGlossyFinish(
 ) {
   ctx.save();
 
-  // Prevent the glossy layers from creating extra shadows
   ctx.shadowColor = "transparent";
   ctx.shadowBlur = 0;
   ctx.shadowOffsetX = 0;
   ctx.shadowOffsetY = 0;
 
-  /*
-    1. SUBTLE DEPTH
-    Slightly darker lower-right edge.
-  */
-  ctx.globalAlpha = 0.16;
-
-  ctx.lineWidth = Math.max(
-    1.5,
-    fontSize * 0.028
-  );
-
-  ctx.strokeStyle =
-    "rgba(0, 0, 0, 0.18)";
+  // 1. Subtle depth on lower-right edge
+  ctx.globalAlpha = 0.18;
+  ctx.lineWidth = Math.max(1.5, fontSize * 0.032);
+  ctx.strokeStyle = "rgba(30, 20, 15, 0.22)";
 
   ctx.strokeText(
     character,
@@ -736,47 +726,56 @@ function drawGlossyFinish(
     y + fontSize * 0.010
   );
 
-
-  /*
-    2. SOFT UPPER-LEFT LIGHT
-    Very subtle light edge.
-  */
-  ctx.globalAlpha = 0.30;
-
-  ctx.lineWidth = Math.max(
-    1,
-    fontSize * 0.014
-  );
-
-  ctx.strokeStyle =
-    "rgba(255, 255, 255, 0.70)";
+  // 2. Soft upper-left reflective rim
+  ctx.globalAlpha = 0.24;
+  ctx.lineWidth = Math.max(1, fontSize * 0.013);
+  ctx.strokeStyle = "rgba(255,255,255,0.72)";
 
   ctx.strokeText(
     character,
-    x - fontSize * 0.005,
+    x - fontSize * 0.004,
     y - fontSize * 0.006
   );
 
+  // 3. Main ceramic highlight
+  // Small curved-looking white streak near upper-left
+  const highlightX = x + fontSize * 0.14;
+  const highlightY = y - fontSize * 0.24;
 
-  /*
-    3. FINE GLOSS HIGHLIGHT
-    Small highlight without washing out the colour.
-  */
-  ctx.globalAlpha = 0.35;
+  ctx.globalAlpha = 0.82;
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = Math.max(2, fontSize * 0.018);
+  ctx.lineCap = "round";
 
-  ctx.lineWidth = Math.max(
-    1,
-    fontSize * 0.007
+  ctx.beginPath();
+  ctx.moveTo(
+    highlightX,
+    highlightY
   );
 
-  ctx.strokeStyle =
-    "rgba(255, 255, 255, 0.85)";
-
-  ctx.strokeText(
-    character,
-    x - fontSize * 0.010,
-    y - fontSize * 0.012
+  ctx.quadraticCurveTo(
+    highlightX + fontSize * 0.035,
+    highlightY - fontSize * 0.025,
+    highlightX + fontSize * 0.065,
+    highlightY + fontSize * 0.005
   );
+
+  ctx.stroke();
+
+  // 4. Tiny bright highlight point
+  ctx.globalAlpha = 0.65;
+  ctx.fillStyle = "#ffffff";
+
+  ctx.beginPath();
+  ctx.arc(
+    highlightX - fontSize * 0.008,
+    highlightY,
+    Math.max(1.5, fontSize * 0.012),
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
 
   ctx.restore();
 }
