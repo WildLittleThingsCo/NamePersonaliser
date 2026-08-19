@@ -700,7 +700,73 @@ ctx.restore();
 
   updateOrderSummary();
 }
+function drawGlossyFinish(
+  character,
+  x,
+  y,
+  fontSize
+) {
+  ctx.save();
 
+  ctx.shadowColor = "transparent";
+
+  ctx.globalAlpha = 0.22;
+  ctx.fillStyle = "#ffffff";
+
+  ctx.lineWidth = Math.max(2, fontSize * 0.018);
+  ctx.strokeStyle = "rgba(255,255,255,0.75)";
+
+  ctx.strokeText(
+    character,
+    x - fontSize * 0.012,
+    y - fontSize * 0.012
+  );
+
+  ctx.restore();
+}
+function drawWildBearFinish(
+  character,
+  x,
+  y,
+  fontSize,
+  colour
+) {
+  ctx.save();
+
+  ctx.shadowColor = "transparent";
+
+  /*
+    Draw the letter again several times with tiny offsets.
+    This gives the edge a soft fuzzy/boucle appearance.
+  */
+
+  ctx.globalAlpha = 0.16;
+  ctx.fillStyle = colour;
+
+  const textureAmount = 14;
+
+  for (let i = 0; i < textureAmount; i++) {
+    const angle =
+      (Math.PI * 2 * i) / textureAmount;
+
+    const distance =
+      fontSize * 0.012;
+
+    const offsetX =
+      Math.cos(angle) * distance;
+
+    const offsetY =
+      Math.sin(angle) * distance;
+
+    ctx.fillText(
+      character,
+      x + offsetX,
+      y + offsetY
+    );
+  }
+
+  ctx.restore();
+}
 // Rounded rectangle helper.
 function roundRect(
   context,
