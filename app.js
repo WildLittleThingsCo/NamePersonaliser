@@ -644,10 +644,10 @@ function render() {
 
        ctx.save();
 
-ctx.shadowColor = "rgba(0, 0, 0, 0.20)";
-ctx.shadowBlur = 10;
-ctx.shadowOffsetX = 3;
-ctx.shadowOffsetY = 5;
+ctx.shadowColor = "rgba(0, 0, 0, 0.12)";
+ctx.shadowBlur = 6;
+ctx.shadowOffsetX = 2;
+ctx.shadowOffsetY = 3;
 ctx.fillStyle = colour;
 
 ctx.fillText(
@@ -710,52 +710,72 @@ function drawGlossyFinish(
 ) {
   ctx.save();
 
-  // Make sure the gloss itself creates no extra shadow.
+  // Prevent the glossy layers from creating extra shadows
   ctx.shadowColor = "transparent";
   ctx.shadowBlur = 0;
   ctx.shadowOffsetX = 0;
   ctx.shadowOffsetY = 0;
 
   /*
-    Soft darker lower-right edge.
-    Gives the letter rounded depth without duplicating it.
+    1. SUBTLE DEPTH
+    Slightly darker lower-right edge.
   */
   ctx.globalAlpha = 0.16;
-  ctx.lineWidth = Math.max(2, fontSize * 0.035);
-  ctx.strokeStyle = "rgba(40, 25, 20, 0.28)";
+
+  ctx.lineWidth = Math.max(
+    1.5,
+    fontSize * 0.028
+  );
+
+  ctx.strokeStyle =
+    "rgba(0, 0, 0, 0.18)";
 
   ctx.strokeText(
     character,
-    x + fontSize * 0.008,
-    y + fontSize * 0.012
+    x + fontSize * 0.006,
+    y + fontSize * 0.010
   );
 
+
   /*
-    Pale upper-left rim.
+    2. SOFT UPPER-LEFT LIGHT
+    Very subtle light edge.
   */
   ctx.globalAlpha = 0.30;
-  ctx.lineWidth = Math.max(1.5, fontSize * 0.018);
-  ctx.strokeStyle = "rgba(255,255,255,0.95)";
 
-  ctx.strokeText(
-    character,
-    x - fontSize * 0.006,
-    y - fontSize * 0.008
+  ctx.lineWidth = Math.max(
+    1,
+    fontSize * 0.014
   );
 
-  /*
-    Fine bright highlight.
-    Kept very close to the original character so it doesn't
-    bleed into neighbouring letters.
-  */
-  ctx.globalAlpha = 0.42;
-  ctx.lineWidth = Math.max(1, fontSize * 0.007);
-  ctx.strokeStyle = "#ffffff";
+  ctx.strokeStyle =
+    "rgba(255, 255, 255, 0.70)";
 
   ctx.strokeText(
     character,
-    x - fontSize * 0.01,
-    y - fontSize * 0.014
+    x - fontSize * 0.005,
+    y - fontSize * 0.006
+  );
+
+
+  /*
+    3. FINE GLOSS HIGHLIGHT
+    Small highlight without washing out the colour.
+  */
+  ctx.globalAlpha = 0.35;
+
+  ctx.lineWidth = Math.max(
+    1,
+    fontSize * 0.007
+  );
+
+  ctx.strokeStyle =
+    "rgba(255, 255, 255, 0.85)";
+
+  ctx.strokeText(
+    character,
+    x - fontSize * 0.010,
+    y - fontSize * 0.012
   );
 
   ctx.restore();
