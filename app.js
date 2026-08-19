@@ -645,9 +645,9 @@ function render() {
        ctx.save();
 
 ctx.shadowColor = "rgba(0, 0, 0, 0.20)";
-ctx.shadowBlur = 14;
-ctx.shadowOffsetX = 4;
-ctx.shadowOffsetY = 7;
+ctx.shadowBlur = 10;
+ctx.shadowOffsetX = 3;
+ctx.shadowOffsetY = 5;
 ctx.fillStyle = colour;
 
 ctx.fillText(
