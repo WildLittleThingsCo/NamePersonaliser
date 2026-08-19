@@ -759,45 +759,6 @@ function drawGlossyFinish(
   );
 
 
-  // --------------------------------
-  // 3. CERAMIC HIGHLIGHT POSITION
-  // --------------------------------
-
-  const highlightX =
-    x + fontSize * 0.065;
-
-  const highlightY =
-    y - fontSize * 0.35;
-
-
-
-  // --------------------------------
-  // 5. SMALL CERAMIC REFLECTION DOT
-  // --------------------------------
-
-  ctx.globalAlpha = 0.60;
-
-  ctx.fillStyle =
-    "rgba(255, 255, 255, 0.95)";
-
-  ctx.beginPath();
-
-  ctx.arc(
-    highlightX,
-    highlightY - fontSize * 0.004,
-
-    Math.max(
-      1,
-      fontSize * 0.007
-    ),
-
-    0,
-    Math.PI * 2
-  );
-
-  ctx.fill();
-
-
   ctx.restore();
 }
 function drawWildBearFinish(
