@@ -642,37 +642,56 @@ function render() {
             index % activePalette.length
           ].hex;
 
-        ctx.save();
+       ctx.save();
 
-        ctx.shadowColor =
-          "rgba(0, 0, 0, 0.14)";
+ctx.shadowColor = "rgba(0, 0, 0, 0.14)";
+ctx.shadowBlur = 9;
+ctx.shadowOffsetY = 3;
 
-        ctx.shadowBlur = 9;
-        ctx.shadowOffsetY = 3;
+ctx.fillStyle = colour;
 
-        ctx.fillStyle = colour;
+ctx.fillText(
+  character,
+  currentX,
+  height / 2
+);
 
-        ctx.fillText(
-          character,
-          currentX,
-          height / 2
-        );
+ctx.lineWidth = Math.max(
+  1,
+  fontSize * 0.025
+);
 
-        ctx.lineWidth = Math.max(
-          1,
-          fontSize * 0.025
-        );
+ctx.strokeStyle =
+  hexToRgba(colour, 0.08);
 
-        ctx.strokeStyle =
-          hexToRgba(colour, 0.08);
+ctx.strokeText(
+  character,
+  currentX,
+  height / 2
+);
 
-        ctx.strokeText(
-          character,
-          currentX,
-          height / 2
-        );
+/* COLLECTION FINISH */
 
-        ctx.restore();
+if (collectionSelect.value === "ceramic") {
+  drawGlossyFinish(
+    character,
+    currentX,
+    height / 2,
+    fontSize
+  );
+}
+
+if (collectionSelect.value === "wildBear") {
+  drawWildBearFinish(
+    character,
+    currentX,
+    height / 2,
+    fontSize,
+    colour
+  );
+}
+
+ctx.restore();
       }
 
       currentX += characterWidth;
