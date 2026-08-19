@@ -710,72 +710,52 @@ function drawGlossyFinish(
 ) {
   ctx.save();
 
-  // Remove inherited shadow while painting the finish.
+  // Make sure the gloss itself creates no extra shadow.
   ctx.shadowColor = "transparent";
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
 
   /*
-    1. Darker lower-right edge.
-    This creates the feeling that the letter has rounded depth.
+    Soft darker lower-right edge.
+    Gives the letter rounded depth without duplicating it.
   */
-  ctx.globalAlpha = 0.20;
-  ctx.lineWidth = Math.max(2, fontSize * 0.045);
-  ctx.strokeStyle = "rgba(0, 0, 0, 0.22)";
+  ctx.globalAlpha = 0.16;
+  ctx.lineWidth = Math.max(2, fontSize * 0.035);
+  ctx.strokeStyle = "rgba(40, 25, 20, 0.28)";
 
   ctx.strokeText(
     character,
-    x + fontSize * 0.018,
-    y + fontSize * 0.022
+    x + fontSize * 0.008,
+    y + fontSize * 0.012
   );
 
   /*
-    2. Soft light edge on the upper-left.
+    Pale upper-left rim.
   */
-  ctx.globalAlpha = 0.32;
-  ctx.lineWidth = Math.max(2, fontSize * 0.03);
-  ctx.strokeStyle = "rgba(255,255,255,0.9)";
-
-  ctx.strokeText(
-    character,
-    x - fontSize * 0.012,
-    y - fontSize * 0.014
-  );
-
-  /*
-    3. Strong glossy highlight.
-    This slightly offset white version creates the inflated,
-    shiny ceramic/plastic appearance.
-  */
-  ctx.globalAlpha = 0.20;
-  ctx.fillStyle = "#ffffff";
-
-  ctx.save();
-
-  ctx.translate(
-    x + fontSize * 0.025,
-    y - fontSize * 0.055
-  );
-
-  ctx.scale(0.94, 0.90);
-
-  ctx.fillText(
-    character,
-    -x,
-    0
-  );
-
-  ctx.restore();
-
-  /*
-    4. Small bright highlight along the top-left edge.
-  */
-  ctx.globalAlpha = 0.55;
-  ctx.lineWidth = Math.max(1.5, fontSize * 0.012);
+  ctx.globalAlpha = 0.30;
+  ctx.lineWidth = Math.max(1.5, fontSize * 0.018);
   ctx.strokeStyle = "rgba(255,255,255,0.95)";
 
   ctx.strokeText(
     character,
-    x - fontSize * 0.02,
-    y - fontSize * 0.025
+    x - fontSize * 0.006,
+    y - fontSize * 0.008
+  );
+
+  /*
+    Fine bright highlight.
+    Kept very close to the original character so it doesn't
+    bleed into neighbouring letters.
+  */
+  ctx.globalAlpha = 0.42;
+  ctx.lineWidth = Math.max(1, fontSize * 0.007);
+  ctx.strokeStyle = "#ffffff";
+
+  ctx.strokeText(
+    character,
+    x - fontSize * 0.01,
+    y - fontSize * 0.014
   );
 
   ctx.restore();
