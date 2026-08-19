@@ -739,8 +739,8 @@ function drawGlossyFinish(
 
   // 3. Main ceramic highlight
   // Small curved-looking white streak near upper-left
-  const highlightX = x + fontSize * 0.14;
-  const highlightY = y - fontSize * 0.24;
+  const highlightX = x + fontSize * 0.065;
+  const highlightY = y - fontSize * 0.27;
 
   ctx.globalAlpha = 0.82;
   ctx.strokeStyle = "#ffffff";
