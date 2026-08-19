@@ -644,10 +644,10 @@ function render() {
 
        ctx.save();
 
-ctx.shadowColor = "rgba(0, 0, 0, 0.13)";
-ctx.shadowBlur = 7;
-ctx.shadowOffsetX = 2;
-ctx.shadowOffsetY = 4;
+ctx.shadowColor = "rgba(0, 0, 0, 0.14)";
+ctx.shadowBlur = 9;
+ctx.shadowOffsetX = 3;
+ctx.shadowOffsetY = 5;
 ctx.fillStyle = colour;
 
 ctx.fillText(
@@ -721,20 +721,20 @@ function drawGlossyFinish(
   // 1. SUBTLE LOWER-RIGHT DEPTH
   // --------------------------------
 
-  ctx.globalAlpha = 0.18;
+ctx.globalAlpha = 0.24;
 
-  ctx.lineWidth = Math.max(
-    1.5,
-    fontSize * 0.032
-  );
+ctx.lineWidth = Math.max(
+  2,
+  fontSize * 0.045
+);
 
-  ctx.strokeStyle =
-    "rgba(30, 20, 15, 0.22)";
+ctx.strokeStyle =
+  "rgba(30, 20, 15, 0.24)";
 
   ctx.strokeText(
     character,
-    x + fontSize * 0.006,
-    y + fontSize * 0.010
+    x + fontSize * 0.010,
+    y + fontSize * 0.015
   );
 
 
@@ -742,11 +742,11 @@ function drawGlossyFinish(
   // 2. SOFT UPPER-LEFT LIGHT
   // --------------------------------
 
-  ctx.globalAlpha = 0.24;
+  ctx.globalAlpha = 0.20;
 
   ctx.lineWidth = Math.max(
     1,
-    fontSize * 0.013
+    fontSize * 0.022
   );
 
   ctx.strokeStyle =
@@ -754,8 +754,8 @@ function drawGlossyFinish(
 
   ctx.strokeText(
     character,
-    x - fontSize * 0.004,
-    y - fontSize * 0.006
+    x - fontSize * 0.006,
+    y - fontSize * 0.008
   );
 
 
