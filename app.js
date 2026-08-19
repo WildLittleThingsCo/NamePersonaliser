@@ -737,30 +737,34 @@ function drawGlossyFinish(
     y - fontSize * 0.006
   );
 
-  // 3. Main ceramic highlight
-  // Small curved-looking white streak near upper-left
-  const highlightX = x + fontSize * 0.053;
-  const highlightY = y - fontSize * 0.35;
+// 3. Main ceramic highlight
+const highlightX = x + fontSize * 0.053;
+const highlightY = y - fontSize * 0.35;
 
-  ctx.globalAlpha = 0.82;
-  ctx.strokeStyle = "#ffffff";
-  ctx.lineWidth = Math.max(2, fontSize * 0.018);
-  ctx.lineCap = "round";
+ctx.globalAlpha = 0.78;
+ctx.strokeStyle = "#ffffff";
+ctx.lineWidth = Math.max(2, fontSize * 0.016);
+ctx.lineCap = "round";
 
-  ctx.beginPath();
-  ctx.moveTo(
-    highlightX,
-    highlightY
-  );
+ctx.beginPath();
 
-  ctx.quadraticCurveTo(
-    highlightX + fontSize * 0.035,
-    highlightY - fontSize * 0.025,
-    highlightX + fontSize * 0.065,
-    highlightY + fontSize * 0.005
-  );
+ctx.moveTo(
+  highlightX,
+  highlightY
+);
 
-  ctx.stroke();
+ctx.bezierCurveTo(
+  highlightX - fontSize * 0.008,
+  highlightY + fontSize * 0.035,
+
+  highlightX - fontSize * 0.012,
+  highlightY + fontSize * 0.075,
+
+  highlightX + fontSize * 0.002,
+  highlightY + fontSize * 0.11
+);
+
+ctx.stroke();
 
   // 4. Tiny bright highlight point
   ctx.globalAlpha = 0.65;
