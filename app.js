@@ -770,37 +770,131 @@ function drawWildBearFinish(
 ) {
   ctx.save();
 
+  // No glossy shadow
   ctx.shadowColor = "transparent";
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
 
   /*
-    Draw the letter again several times with tiny offsets.
-    This gives the edge a soft fuzzy/boucle appearance.
+    Build a temporary mask using the letter.
+    This keeps the texture inside the letter shape.
   */
+  const maskCanvas = document.createElement("canvas");
+  maskCanvas.width = previewCanvas.width;
+  maskCanvas.height = previewCanvas.height;
 
-  ctx.globalAlpha = 0.16;
-  ctx.fillStyle = colour;
+  const maskCtx = maskCanvas.getContext("2d");
 
-  const textureAmount = 14;
+  maskCtx.font = ctx.font;
+  maskCtx.textAlign = "left";
+  maskCtx.textBaseline = "middle";
 
-  for (let i = 0; i < textureAmount; i++) {
-    const angle =
-      (Math.PI * 2 * i) / textureAmount;
+  maskCtx.fillStyle = "#ffffff";
+  maskCtx.fillText(
+    character,
+    x,
+    y
+  );
 
-    const distance =
-      fontSize * 0.012;
+  /*
+    Create a second temporary canvas for the boucle texture.
+  */
+  const textureCanvas = document.createElement("canvas");
+  textureCanvas.width = previewCanvas.width;
+  textureCanvas.height = previewCanvas.height;
 
-    const offsetX =
-      Math.cos(angle) * distance;
+  const textureCtx = textureCanvas.getContext("2d");
 
-    const offsetY =
-      Math.sin(angle) * distance;
+  /*
+    Soft lighter and darker speckles.
+    Small circles give a fuzzy/boucle impression.
+  */
+  const characterWidth =
+    ctx.measureText(character).width;
 
-    ctx.fillText(
-      character,
-      x + offsetX,
-      y + offsetY
+  const textureCount =
+    Math.max(
+      120,
+      Math.floor(fontSize * 1.3)
     );
+
+  for (let i = 0; i < textureCount; i++) {
+    const dotX =
+      x +
+      Math.random() * characterWidth;
+
+    const dotY =
+      y -
+      fontSize * 0.48 +
+      Math.random() * fontSize * 0.96;
+
+    const radius =
+      Math.random() * 2.2 + 0.8;
+
+    textureCtx.beginPath();
+
+    textureCtx.arc(
+      dotX,
+      dotY,
+      radius,
+      0,
+      Math.PI * 2
+    );
+
+    if (Math.random() > 0.5) {
+      textureCtx.fillStyle =
+        "rgba(255,255,255,0.22)";
+    } else {
+      textureCtx.fillStyle =
+        "rgba(0,0,0,0.10)";
+    }
+
+    textureCtx.fill();
   }
+
+  /*
+    Keep only the texture that falls inside the letter.
+  */
+  textureCtx.globalCompositeOperation =
+    "destination-in";
+
+  textureCtx.drawImage(
+    maskCanvas,
+    0,
+    0
+  );
+
+  /*
+    Paint the texture over the existing letter.
+  */
+  ctx.globalAlpha = 0.95;
+
+  ctx.drawImage(
+    textureCanvas,
+    0,
+    0
+  );
+
+  /*
+    Soft fuzzy-looking outer edge.
+  */
+  ctx.globalAlpha = 0.12;
+
+  ctx.lineWidth =
+    Math.max(
+      1.5,
+      fontSize * 0.025
+    );
+
+  ctx.strokeStyle =
+    "rgba(255,255,255,0.5)";
+
+  ctx.strokeText(
+    character,
+    x,
+    y
+  );
 
   ctx.restore();
 }
