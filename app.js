@@ -337,7 +337,7 @@ function buildSharedPalette() {
 
 // Create the Etsy order summary.
 function getDesignSummary() {
-  const name = getCurrentText().toUpperCase();
+  const name = getCurrentText();
 
   syncLetterColours();
 
@@ -425,11 +425,8 @@ collectionSelect.addEventListener("change", () => {
 nameInput.addEventListener("input", () => {
   let value = nameInput.value;
 
-  // Remove numbers.
+  // Remove numbers
   value = value.replace(/[0-9]/g, "");
-
-  // Convert the name to uppercase.
-  value = value.toUpperCase();
 
   nameInput.value = value;
 
