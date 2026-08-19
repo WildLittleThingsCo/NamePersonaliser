@@ -767,7 +767,7 @@ function drawGlossyFinish(
     x + fontSize * 0.065;
 
   const highlightY =
-    y - fontSize * 0.27;
+    y - fontSize * 0.35;
 
 
   // --------------------------------
