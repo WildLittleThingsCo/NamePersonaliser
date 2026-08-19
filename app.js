@@ -644,10 +644,10 @@ function render() {
 
        ctx.save();
 
-ctx.shadowColor = "rgba(0, 0, 0, 0.12)";
-ctx.shadowBlur = 6;
+ctx.shadowColor = "rgba(0, 0, 0, 0.13)";
+ctx.shadowBlur = 7;
 ctx.shadowOffsetX = 2;
-ctx.shadowOffsetY = 3;
+ctx.shadowOffsetY = 4;
 ctx.fillStyle = colour;
 
 ctx.fillText(
@@ -710,15 +710,26 @@ function drawGlossyFinish(
 ) {
   ctx.save();
 
+  // Prevent glossy effects from creating extra shadows
   ctx.shadowColor = "transparent";
   ctx.shadowBlur = 0;
   ctx.shadowOffsetX = 0;
   ctx.shadowOffsetY = 0;
 
-  // 1. Subtle depth on lower-right edge
+
+  // --------------------------------
+  // 1. SUBTLE LOWER-RIGHT DEPTH
+  // --------------------------------
+
   ctx.globalAlpha = 0.18;
-  ctx.lineWidth = Math.max(1.5, fontSize * 0.032);
-  ctx.strokeStyle = "rgba(30, 20, 15, 0.22)";
+
+  ctx.lineWidth = Math.max(
+    1.5,
+    fontSize * 0.032
+  );
+
+  ctx.strokeStyle =
+    "rgba(30, 20, 15, 0.22)";
 
   ctx.strokeText(
     character,
@@ -726,10 +737,20 @@ function drawGlossyFinish(
     y + fontSize * 0.010
   );
 
-  // 2. Soft upper-left reflective rim
+
+  // --------------------------------
+  // 2. SOFT UPPER-LEFT LIGHT
+  // --------------------------------
+
   ctx.globalAlpha = 0.24;
-  ctx.lineWidth = Math.max(1, fontSize * 0.013);
-  ctx.strokeStyle = "rgba(255,255,255,0.72)";
+
+  ctx.lineWidth = Math.max(
+    1,
+    fontSize * 0.013
+  );
+
+  ctx.strokeStyle =
+    "rgba(255, 255, 255, 0.70)";
 
   ctx.strokeText(
     character,
@@ -737,49 +758,81 @@ function drawGlossyFinish(
     y - fontSize * 0.006
   );
 
-// 3. Main ceramic highlight
-const highlightX = x + fontSize * 0.07;
-const highlightY = y - fontSize * 0.35;
 
-ctx.globalAlpha = 0.78;
-ctx.strokeStyle = "#ffffff";
-ctx.lineWidth = Math.max(2, fontSize * 0.016);
-ctx.lineCap = "round";
+  // --------------------------------
+  // 3. CERAMIC HIGHLIGHT POSITION
+  // --------------------------------
 
-ctx.beginPath();
+  const highlightX =
+    x + fontSize * 0.065;
 
-ctx.moveTo(
-  highlightX,
-  highlightY
-);
+  const highlightY =
+    y - fontSize * 0.27;
 
-ctx.bezierCurveTo(
-  highlightX - fontSize * 0.008,
-  highlightY + fontSize * 0.035,
 
-  highlightX - fontSize * 0.012,
-  highlightY + fontSize * 0.075,
+  // --------------------------------
+  // 4. CURVED VERTICAL SHINE
+  // --------------------------------
 
-  highlightX + fontSize * 0.002,
-  highlightY + fontSize * 0.11
-);
+  ctx.globalAlpha = 0.72;
 
-ctx.stroke();
+  ctx.strokeStyle =
+    "rgba(255, 255, 255, 0.95)";
 
-  // 4. Tiny bright highlight point
-  ctx.globalAlpha = 0.65;
-  ctx.fillStyle = "#ffffff";
+  ctx.lineWidth = Math.max(
+    1.5,
+    fontSize * 0.014
+  );
+
+  ctx.lineCap = "round";
 
   ctx.beginPath();
-  ctx.arc(
+
+  ctx.moveTo(
+    highlightX,
+    highlightY
+  );
+
+  ctx.bezierCurveTo(
     highlightX - fontSize * 0.008,
-    highlightY,
-    Math.max(1.5, fontSize * 0.012),
+    highlightY + fontSize * 0.025,
+
+    highlightX - fontSize * 0.010,
+    highlightY + fontSize * 0.060,
+
+    highlightX + fontSize * 0.002,
+    highlightY + fontSize * 0.090
+  );
+
+  ctx.stroke();
+
+
+  // --------------------------------
+  // 5. SMALL CERAMIC REFLECTION DOT
+  // --------------------------------
+
+  ctx.globalAlpha = 0.60;
+
+  ctx.fillStyle =
+    "rgba(255, 255, 255, 0.95)";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    highlightX,
+    highlightY - fontSize * 0.004,
+
+    Math.max(
+      1,
+      fontSize * 0.007
+    ),
+
     0,
     Math.PI * 2
   );
 
   ctx.fill();
+
 
   ctx.restore();
 }
