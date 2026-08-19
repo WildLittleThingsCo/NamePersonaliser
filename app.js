@@ -646,8 +646,8 @@ function render() {
 
 ctx.shadowColor = "rgba(0, 0, 0, 0.14)";
 ctx.shadowBlur = 9;
-ctx.shadowOffsetX = 3;
-ctx.shadowOffsetY = 5;
+ctx.shadowOffsetX = 0;
+ctx.shadowOffsetY = 3;
 ctx.fillStyle = colour;
 
 ctx.fillText(
@@ -670,18 +670,6 @@ ctx.strokeText(
   height / 2
 );
 
-/* COLLECTION FINISH */
-
-if (collectionSelect.value === "ceramic") {
-  drawGlossyFinish(
-  character,
-  currentX,
-  height / 2,
-  fontSize,
-  colour
-);
-}
-
 ctx.restore();
       }
 
@@ -691,66 +679,7 @@ ctx.restore();
 
   updateOrderSummary();
 }
-function drawGlossyFinish(
-  character,
-  x,
-  y,
-  fontSize,
-  colour
-) {
-  ctx.save();
 
-  // Prevent glossy effects from creating extra shadows
-  ctx.shadowColor = "transparent";
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 0;
-
-
-  // --------------------------------
-  // 1. SUBTLE LOWER-RIGHT DEPTH
-  // --------------------------------
-
-ctx.globalAlpha = 0.24;
-
-ctx.lineWidth = Math.max(
-  2,
-  fontSize * 0.045
-);
-
-ctx.strokeStyle =
-  "rgba(30, 20, 15, 0.24)";
-
-  ctx.strokeText(
-    character,
-    x + fontSize * 0.010,
-    y + fontSize * 0.015
-  );
-
-
-  // --------------------------------
-  // 2. SOFT UPPER-LEFT LIGHT
-  // --------------------------------
-
-  ctx.globalAlpha = 0.20;
-
-  ctx.lineWidth = Math.max(
-    1,
-    fontSize * 0.022
-  );
-
-  ctx.strokeStyle =
-    "rgba(255, 255, 255, 0.70)";
-
-  ctx.strokeText(
-    character,
-    x - fontSize * 0.006,
-    y - fontSize * 0.008
-  );
-
-
-  ctx.restore();
-}
 
 // Rounded rectangle helper.
 function roundRect(
