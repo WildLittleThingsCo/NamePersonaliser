@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "LowercaseLetters";
+  src: url("Matcha Cih.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root{
   --bg:#f5f6f8;
   --card:#ffffff;
@@ -831,4 +838,13 @@ h1{margin:0 0 12px 0;font-size:20px}
   font-size: 0.78rem;
   font-weight: 700;
   color: #796f68;
+}
+/* Lowercase font */
+
+.lowercase-example {
+  font-family: "LowercaseLetters", sans-serif;
+}
+
+body.lowercase-selected .letter-character {
+  font-family: "LowercaseLetters", sans-serif;
 }
