@@ -47,8 +47,10 @@ const collectionPalettes = {
 };
 
 const nameInput = document.getElementById("nameInput");
-const collectionSelect = document.getElementById("collectionSelect");
-const caseOptions =
+const collectionOptions =
+  document.querySelectorAll(".collection-option");
+
+let selectedCollection = "ceramic";const caseOptions =
   document.querySelectorAll(".case-option");
 
 let selectedCase = "uppercase";const letterColorControls = document.getElementById("letterColorControls");
@@ -64,7 +66,7 @@ const copyConfirmation = document.getElementById("copyConfirmation");
 
 const ctx = previewCanvas.getContext("2d");
 
-let activeCollection = collectionSelect.value;
+let activeCollection = selectedCollection;
 let activePalette = collectionPalettes[activeCollection];
 let letterColours = [];
 let selectedLetterIndex = null;
@@ -449,17 +451,34 @@ if (selectedCase === "lowercase") {
 
 // Change collection and replace each letter with colours
 // from the newly selected collection.
-collectionSelect.addEventListener("change", () => {
-  activeCollection = collectionSelect.value;
-  activePalette = collectionPalettes[activeCollection];
+collectionOptions.forEach((button) => {
+  button.addEventListener("click", () => {
 
-  letterColours =
-    createDefaultLetterColours(getCurrentText());
+    selectedCollection =
+      button.dataset.collection;
 
-  selectedLetterIndex = null;
+    activeCollection =
+      selectedCollection;
 
-  buildLetterControls();
-  render();
+    activePalette =
+      collectionPalettes[activeCollection];
+
+    collectionOptions.forEach((option) => {
+      option.classList.remove("selected");
+    });
+
+    button.classList.add("selected");
+
+    letterColours =
+      createDefaultLetterColours(
+        getCurrentText()
+      );
+
+    selectedLetterIndex = null;
+
+    buildLetterControls();
+    render();
+  });
 });
 
 // Update the controls while the customer types.
