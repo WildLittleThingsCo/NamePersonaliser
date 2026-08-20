@@ -1,4 +1,11 @@
 @font-face {
+  font-family: "Mochi";
+  src: url("Mochi%20Boom.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: "LowercaseLetters";
   src: url("Matcha%20Cih.ttf") format("truetype");
   font-weight: normal;
