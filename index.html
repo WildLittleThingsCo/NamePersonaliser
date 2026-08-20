@@ -69,12 +69,27 @@ watch your design come to life instantly.
 <div class="step-block">
   <p class="step-label">Step 2</p>
 
-  <label for="caseSelect">Choose your letter case</label>
+  <label>Choose your letter case</label>
 
-  <select id="caseSelect">
-    <option value="uppercase">Uppercase</option>
-    <option value="lowercase">Lowercase</option>
-  </select>
+  <div class="case-options">
+    <button
+      type="button"
+      class="case-option selected"
+      data-case="uppercase"
+    >
+      <span class="case-example">ABC</span>
+      <span class="case-name">Uppercase</span>
+    </button>
+
+    <button
+      type="button"
+      class="case-option"
+      data-case="lowercase"
+    >
+      <span class="case-example lowercase-example">abc</span>
+      <span class="case-name">Lowercase</span>
+    </button>
+  </div>
 </div>
     <div class="step-block">
       <p class="step-label">Step 3</p>
