@@ -48,6 +48,7 @@ const collectionPalettes = {
 
 const nameInput = document.getElementById("nameInput");
 const collectionSelect = document.getElementById("collectionSelect");
+const caseSelect = document.getElementById("caseSelect");
 const letterColorControls = document.getElementById("letterColorControls");
 const sharedPalettePanel = document.getElementById("sharedPalettePanel");
 const selectedLetterLabel = document.getElementById("selectedLetterLabel");
