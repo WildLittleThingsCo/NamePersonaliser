@@ -407,6 +407,22 @@ function updateOrderSummary() {
       "Enter a name to view your colour selection.";
   }
 }
+caseSelect.addEventListener("change", () => {
+  let value = nameInput.value;
+
+  if (caseSelect.value === "uppercase") {
+    value = value.toUpperCase();
+  } else {
+    value = value.toLowerCase();
+  }
+
+  nameInput.value = value;
+
+  syncLetterColours();
+  buildLetterControls();
+  render();
+});
+
 // Change collection and replace each letter with colours
 // from the newly selected collection.
 collectionSelect.addEventListener("change", () => {
