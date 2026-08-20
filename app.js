@@ -360,18 +360,10 @@ function getDesignSummary() {
 
   syncLetterColours();
 
- const collection =
-  selectedCollection === "ceramic"
-    ? "Bubble Wall Collection"
-    : "Wild Bear Collection";
-
-  const collection = selectedOption
-    ? selectedOption.textContent.trim()
-    : "";
-
+  const characters = Array.from(name);
   const colours = [];
 
-  Array.from(name).forEach((letter, index) => {
+  characters.forEach((letter, index) => {
     if (letter === " ") {
       return;
     }
@@ -380,35 +372,30 @@ function getDesignSummary() {
       letterColours[index] ||
       activePalette[index % activePalette.length].hex;
 
-    const colourDetails = activePalette.find((colour) => {
-      return (
-        colour.hex.toLowerCase() ===
-        selectedHex.toLowerCase()
+    const colourDetails =
+      activePalette.find(
+        (colour) =>
+          colour.hex.toLowerCase() === selectedHex.toLowerCase()
       );
-    });
 
     colours.push({
-      letter,
-      colourName: colourDetails
+      letter: letter,
+      name: colourDetails
         ? colourDetails.name
         : "Colour not selected",
       hex: selectedHex
     });
   });
 
-  const colourText = colours
-    .map((item) => `${item.letter}-${item.colourName}`)
-    .join(", ");
-
   const copyText = name
-    ? `Name and colours: ${name}: ${colourText}`
-    : "";
+    ? `Name and colours: ${name}: ${colours
+        .map((item) => `${item.letter}-${item.name}`)
+        .join(", ")}`
+    : "Enter a name and choose your colours before copying your design.";
 
   return {
     name,
-    collection,
     colours,
-    colourText,
     copyText
   };
 }
