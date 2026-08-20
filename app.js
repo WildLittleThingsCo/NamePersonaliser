@@ -48,8 +48,10 @@ const collectionPalettes = {
 
 const nameInput = document.getElementById("nameInput");
 const collectionSelect = document.getElementById("collectionSelect");
-const caseSelect = document.getElementById("caseSelect");
-const letterColorControls = document.getElementById("letterColorControls");
+const caseOptions =
+  document.querySelectorAll(".case-option");
+
+let selectedCase = "uppercase";const letterColorControls = document.getElementById("letterColorControls");
 const sharedPalettePanel = document.getElementById("sharedPalettePanel");
 const selectedLetterLabel = document.getElementById("selectedLetterLabel");
 const sharedPalette = document.getElementById("sharedPalette");
@@ -407,20 +409,33 @@ function updateOrderSummary() {
       "Enter a name to view your colour selection.";
   }
 }
-caseSelect.addEventListener("change", () => {
-  let value = nameInput.value;
+caseOptions.forEach((button) => {
+  button.addEventListener("click", () => {
 
-  if (caseSelect.value === "uppercase") {
-    value = value.toUpperCase();
-  } else {
-    value = value.toLowerCase();
-  }
+    selectedCase = button.dataset.case;
 
-  nameInput.value = value;
+    // Update selected appearance
+    caseOptions.forEach((option) => {
+      option.classList.remove("selected");
+    });
 
-  syncLetterColours();
-  buildLetterControls();
-  render();
+    button.classList.add("selected");
+
+    // Change existing name
+    let value = nameInput.value;
+
+    if (selectedCase === "uppercase") {
+      value = value.toUpperCase();
+    } else {
+      value = value.toLowerCase();
+    }
+
+    nameInput.value = value;
+
+    syncLetterColours();
+    buildLetterControls();
+    render();
+  });
 });
 
 // Change collection and replace each letter with colours
@@ -446,7 +461,7 @@ nameInput.addEventListener("input", () => {
   value = value.replace(/[0-9]/g, "");
 
   
-if (caseSelect.value === "uppercase") {
+if (selectedCase === "uppercase") {
   value = value.toUpperCase();
 } else {
   value = value.toLowerCase();
