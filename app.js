@@ -360,8 +360,10 @@ function getDesignSummary() {
 
   syncLetterColours();
 
-  const selectedOption =
-    collectionSelect.options[collectionSelect.selectedIndex];
+ const collection =
+  selectedCollection === "ceramic"
+    ? "Bubble Wall Collection"
+    : "Wild Bear Collection";
 
   const collection = selectedOption
     ? selectedOption.textContent.trim()
