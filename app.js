@@ -643,9 +643,12 @@ function render() {
   let fontSize =
     Math.floor(height * 0.42);
 
-  const fontFamily = mochiFontLoaded
-    ? '"Mochi"'
-    : "sans-serif";
+ const fontFamily =
+  selectedCase === "lowercase"
+    ? '"LowercaseLetters"'
+    : mochiFontLoaded
+      ? '"Mochi"'
+      : "sans-serif";
 
   ctx.textBaseline = "middle";
   ctx.textAlign = "left";
