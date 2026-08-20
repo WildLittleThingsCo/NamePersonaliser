@@ -76,11 +76,19 @@ const mochiFont = new FontFace(
   'url("./Mochi%20Boom.otf")'
 );
 
+const lowercaseFont = new FontFace(
+  "LowercaseLetters",
+  'url("./Matcha Cih.ttf")'
+);
+
 async function loadMochiFont() {
   try {
-    const loadedFont = await mochiFont.load();
+    const loadedMochi = await mochiFont.load();
+    const loadedLowercase = await lowercaseFont.load();
 
-    document.fonts.add(loadedFont);
+    document.fonts.add(loadedMochi);
+    document.fonts.add(loadedLowercase);
+
     mochiFontLoaded = true;
 
     await document.fonts.ready;
@@ -88,7 +96,7 @@ async function loadMochiFont() {
     buildLetterControls();
     render();
   } catch (error) {
-    console.error("Mochi Boom could not be loaded:", error);
+    console.error("Font could not be loaded:", error);
 
     buildLetterControls();
     render();
