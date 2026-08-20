@@ -413,7 +413,13 @@ caseOptions.forEach((button) => {
   button.addEventListener("click", () => {
 
     selectedCase = button.dataset.case;
-
+    
+if (selectedCase === "lowercase") {
+  document.body.classList.add("lowercase-selected");
+} else {
+  document.body.classList.remove("lowercase-selected");
+}
+    
     // Update selected appearance
     caseOptions.forEach((option) => {
       option.classList.remove("selected");
