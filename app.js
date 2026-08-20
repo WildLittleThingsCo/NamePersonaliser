@@ -97,7 +97,13 @@ async function loadMochiFont() {
 
 // Return the current name without leading or trailing spaces.
 function getCurrentText() {
-  return nameInput.value.trim();
+  const value = nameInput.value.trim();
+
+  if (selectedCase === "lowercase") {
+    return value.toLowerCase();
+  }
+
+  return value.toUpperCase();
 }
 
 // Give each typed character a default colour.
@@ -427,17 +433,6 @@ if (selectedCase === "lowercase") {
 
     button.classList.add("selected");
 
-    // Change existing name
-    let value = nameInput.value;
-
-    if (selectedCase === "uppercase") {
-      value = value.toUpperCase();
-    } else {
-      value = value.toLowerCase();
-    }
-
-    nameInput.value = value;
-
     syncLetterColours();
     buildLetterControls();
     render();
@@ -466,12 +461,6 @@ nameInput.addEventListener("input", () => {
   // Remove numbers
   value = value.replace(/[0-9]/g, "");
 
-  
-if (selectedCase === "uppercase") {
-  value = value.toUpperCase();
-} else {
-  value = value.toLowerCase();
-}
   nameInput.value = value;
 
   syncLetterColours();
