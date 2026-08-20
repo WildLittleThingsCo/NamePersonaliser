@@ -511,7 +511,7 @@ nameInput.addEventListener("input", () => {
 resetBtn.addEventListener("click", () => {
   nameInput.value = "";
 
-  collectionSelect.value = "ceramic";
+  selectedCollection.value = "ceramic";
   activeCollection = "ceramic";
   activePalette = collectionPalettes.ceramic;
 
