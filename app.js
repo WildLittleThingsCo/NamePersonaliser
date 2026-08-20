@@ -78,7 +78,7 @@ const mochiFont = new FontFace(
 
 const lowercaseFont = new FontFace(
   "LowercaseLetters",
-  'url("./Matcha Cih.ttf")'
+  'url("./Matcha%20Cih.ttf")'
 );
 
 async function loadMochiFont() {
