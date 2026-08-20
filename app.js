@@ -445,6 +445,12 @@ nameInput.addEventListener("input", () => {
   // Remove numbers
   value = value.replace(/[0-9]/g, "");
 
+  
+if (caseSelect.value === "uppercase") {
+  value = value.toUpperCase();
+} else {
+  value = value.toLowerCase();
+}
   nameInput.value = value;
 
   syncLetterColours();
